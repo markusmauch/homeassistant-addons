@@ -10,6 +10,7 @@ RUN \
 
 COPY package.json /
 COPY tsconfig.json /
+COPY src/* src/
 COPY run.sh /
 RUN npm install
 RUN chmod a+x /run.sh
