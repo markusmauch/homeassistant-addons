@@ -25,6 +25,7 @@ const TOPIC = options.topic;
 const POWERBOX_HOST = options.powerbox_host;
 const POWERBOX_PORT = options.powerbox_port;
 const POWERBOX_UNIT_ID = options.powerbox_unit_id;
+const CYAN = '\x1b[36m%s\x1b[0m';
 
 type Address = 
     | "raumtemperatur"
@@ -51,7 +52,7 @@ queue.autostart = true;
 queue.timeout = 1000;
 
 const mqttClient = Mqtt.connect( `mqtt://${MQTT_HOST}`, MQTT_USERNAME, MQTT_PASSWORD );
-console.log( `Connected to MQTT host "${MQTT_HOST}"` );
+console.log( CYAN, `Connected to MQTT host "${MQTT_HOST}"` );
 
 const commandTopics = [
     `${TOPIC}/betriebsart`,
@@ -67,7 +68,7 @@ mqttClient.subscribe(commandTopics, {qos: 0}, ( err, res ) =>
     }
     else
     {
-        commandTopics.forEach( topic => console.log( `Subscribed to topic "${topic}"` ) );
+        commandTopics.forEach( topic => console.log( CYAN, `Subscribed to topic "${topic}"` ) );
     }
 } );
 mqttClient.on("message", ( topic, message, info )=>
@@ -89,51 +90,26 @@ mqttClient.on("message", ( topic, message, info )=>
 
 async function write( address: Address, value: number )
 {
-    let modbusConnection: TCPStream | null = null;
-    try
+    const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
+    if ( modbusConnection !== undefined )
     {
-        console.log( `Writing value "${value}" to address "${address}"` );
-        modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
+        console.log( CYAN, `Writing value "${value}" to address "${address}"` );
         const buffer = Buffer.from( [ 0, value ] );
         await Modbus.write( modbusConnection, modbusAddresses[address], buffer );
-    }
-    catch ( err )
-    {
-        console.log( err );
-    }
-    finally
-    {
-        if ( modbusConnection )
-        {
-            await Modbus.close( modbusConnection );
-        }
+        await Modbus.close( modbusConnection );
     }
 }
 
 async function poll()
 {
-    console.log( `Retrieving data from the Powerbox (${counter++})` );
-    let modbusConnection: TCPStream | null = null;
-    try
+    console.log( CYAN, `Retrieving data from the Powerbox (${counter++})` );
+    const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
+    if ( modbusConnection !== undefined )
     {
-        modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
         await readAndPublish(modbusConnection, "raumtemperatur", `${TOPIC}/raumtemperatur`, 0.1, 1);
         await readAndPublish(modbusConnection, "aussentemperatur", `${TOPIC}/aussentemperatur`, 0.1, 1);
         await readAndPublish(modbusConnection, "luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit`, 1, 0);
-        await readAndPublish(modbusConnection, "betriebsart", `${TOPIC}/betriebsart`, 1, 0 );
-        await readAndPublish(modbusConnection, "stossluftung", `${TOPIC}/stossluftung`, 1, 0 );
-        await readAndPublish(modbusConnection, "luftungsstufe", `${TOPIC}/luftungsstufe`, 1, 0 );
-    }
-    catch ( err )
-    {
-        console.error( err )
-    }
-    finally
-    {
-        if ( modbusConnection )
-        {
-            await Modbus.close( modbusConnection );
-        }
+        await Modbus.close( modbusConnection );
     }
 };
 
@@ -141,7 +117,7 @@ async function readAndPublish(modbusConnection: TCPStream, address: Address, top
 {
     const result = await Modbus.read(modbusConnection, modbusAddresses[address]);
     const value = ( parseFloat( result.data[1].toString() ) * scale).toFixed( precision );
-    console.log( `Publishing "${topic}": ${value}` );
+    console.log( CYAN, `Publishing "${topic}": ${value}` );
     await Mqtt.publish(mqttClient, topic, value.toString());
 }
 
@@ -168,15 +144,21 @@ function exitHandler( options: any, exitCode: any )
 {
     if (options.cleanup)
     {
-        console.log( "Closing MQTT connection." )
+        console.log( CYAN, "Closing MQTT connection." )
         mqttClient.unsubscribe(commandTopics);
         mqttClient.end();
     }
-    if (exitCode || exitCode === 0) console.log(exitCode);
-    if (options.exit) process.exit();
+    if (exitCode || exitCode === 0)
+    {
+        console.log( CYAN, exitCode);
+    }
+    if (options.exit)
+    {
+        process.exit();
+    }
 }
 
-//do something when app is closing
+// do something when app is closing
 process.on("exit", exitHandler.bind(null,{cleanup:true}));
 
 //catches ctrl+c event
