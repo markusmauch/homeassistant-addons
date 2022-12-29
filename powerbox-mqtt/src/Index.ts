@@ -135,7 +135,7 @@ async function delay( length: number )
 {
     while ( true )
     {
-        queue.push( poll );
+        await poll();
         await delay(POLL_INTERVAL);
     }
 } )();
