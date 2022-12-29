@@ -35,7 +35,6 @@ type Address =
     | "stossluftung"
     | "luftungsstufe";
 
-
 const modbusAddresses: { [key in Address]: number } = {
     "raumtemperatur": 700,
     "aussentemperatur": 703,
@@ -49,16 +48,14 @@ let counter = 0;
 const queue = Queue();
 queue.concurrency = 1;
 queue.autostart = true;
-queue.timeout = 1000;
 
 const mqttClient = Mqtt.connect( `mqtt://${MQTT_HOST}`, MQTT_USERNAME, MQTT_PASSWORD );
-console.log( CYAN, `Connected to MQTT host "${MQTT_HOST}"` );
+console.log( CYAN, `Connected to MQTT host '${MQTT_HOST}'` );
 
 const commandTopics = [
     `${TOPIC}/betriebsart`,
     `${TOPIC}/luftungsstufe`,
 ];
-
 
 mqttClient.subscribe(commandTopics, {qos: 0}, ( err, res ) =>
 {
@@ -71,6 +68,7 @@ mqttClient.subscribe(commandTopics, {qos: 0}, ( err, res ) =>
         commandTopics.forEach( topic => console.log( CYAN, `Subscribed to topic "${topic}"` ) );
     }
 } );
+
 mqttClient.on("message", ( topic, message, info )=>
 {
     const value = parseInt( message.toString() );
@@ -115,11 +113,12 @@ async function poll()
 
 async function readAndPublish(modbusConnection: TCPStream, address: Address, topic: string, scale = 1, precision = 1)
 {
+    console.log( CYAN, `Reading value of '${address}'` );
     const result = await Modbus.read(modbusConnection, modbusAddresses[address]);
     if ( result !== null )
     {
         const value = ( parseFloat( result.data[1].toString() ) * scale).toFixed( precision );
-        console.log( CYAN, `Publishing "${topic}": ${value}` );
+        console.log( CYAN, `Publishing value '${value}' to topic '${topic}'` );
         await Mqtt.publish(mqttClient, topic, value.toString());
     }
 }
@@ -147,13 +146,14 @@ function exitHandler( options: any, exitCode: any )
 {
     if (options.cleanup)
     {
-        console.log( CYAN, "Closing MQTT connection." )
+        console.log( CYAN, "Closing MQTT connection." );
+        queue.end();
         mqttClient.unsubscribe(commandTopics);
         mqttClient.end();
     }
     if (exitCode || exitCode === 0)
     {
-        console.log( CYAN, exitCode);
+        console.log( CYAN, exitCode );
     }
     if (options.exit)
     {

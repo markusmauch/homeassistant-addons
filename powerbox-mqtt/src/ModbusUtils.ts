@@ -11,6 +11,7 @@ export function connect( host: string, port: number, unit: number )
             if ( err )
             {
                 console.error(err);
+                close( connection );
                 resolve( null );
             }
             else
@@ -30,6 +31,7 @@ export async function read( connection: modbus.TCPStream, address: number )
             if (err)
             {
                 console.error( err );
+                close( connection );
                 resolve(null);
             }
             else
