@@ -4,18 +4,9 @@ version: "1.0.0"
 slug: "powerbox-mqtt"
 init: false
 host_network: true
-# full_access: true
-# host_dbus: true
 privileged:
   - NET_ADMIN
   - SYS_ADMIN
-  # - SYS_RAWIO
-  # - SYS_TIME
-  # - SYS_NICE
-  # - SYS_RESOURCE
-  # - SYS_PTRACE
-  # - SYS_MODULE
-  # - DAC_READ_SEARCH
 arch:
   - armv7
 options:
