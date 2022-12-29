@@ -5,7 +5,7 @@ import Queue from "queue";
 import commandLineArgs, { OptionDefinition } from "command-line-args";
 
 const optionDefinitions: OptionDefinition[] = [
-    { name: "poll_interval", type: Number, defaultValue: 5000 },
+    { name: "poll_interval", type: Number, defaultValue: 60000 },
     { name: "mqtt_host", type: String, defaultValue: "homeassistant.local" },
     { name: "mqtt_username", type: String, defaultValue: "" },
     { name: "mqtt_password", type: String, defaultValue: "" },
@@ -91,7 +91,7 @@ mqttClient.on("message", ( topic, message, info )=>
 async function write( address: Address, value: number )
 {
     const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
-    if ( modbusConnection !== undefined )
+    if ( modbusConnection !== null )
     {
         console.log( CYAN, `Writing value "${value}" to address "${address}"` );
         const buffer = Buffer.from( [ 0, value ] );
@@ -104,7 +104,7 @@ async function poll()
 {
     console.log( CYAN, `Retrieving data from the Powerbox (${counter++})` );
     const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
-    if ( modbusConnection !== undefined )
+    if ( modbusConnection !== null )
     {
         await readAndPublish(modbusConnection, "raumtemperatur", `${TOPIC}/raumtemperatur`, 0.1, 1);
         await readAndPublish(modbusConnection, "aussentemperatur", `${TOPIC}/aussentemperatur`, 0.1, 1);
@@ -116,9 +116,12 @@ async function poll()
 async function readAndPublish(modbusConnection: TCPStream, address: Address, topic: string, scale = 1, precision = 1)
 {
     const result = await Modbus.read(modbusConnection, modbusAddresses[address]);
-    const value = ( parseFloat( result.data[1].toString() ) * scale).toFixed( precision );
-    console.log( CYAN, `Publishing "${topic}": ${value}` );
-    await Mqtt.publish(mqttClient, topic, value.toString());
+    if ( result !== null )
+    {
+        const value = ( parseFloat( result.data[1].toString() ) * scale).toFixed( precision );
+        console.log( CYAN, `Publishing "${topic}": ${value}` );
+        await Mqtt.publish(mqttClient, topic, value.toString());
+    }
 }
 
 async function delay( length: number )

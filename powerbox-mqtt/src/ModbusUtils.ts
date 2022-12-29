@@ -4,13 +4,14 @@ export type ResponseData = { type: 'Buffer'; data: number[]; };
 
 export function connect( host: string, port: number, unit: number )
 {
-    return new Promise<modbus.TCPStream>( ( resolve, reject ) =>
+    return new Promise<modbus.TCPStream|null>( ( resolve, reject ) =>
     {
         modbus.tcp.connect( port, host, { unitId: 10 }, ( err, connection ) =>
         {
             if ( err )
             {
-                reject( err );
+                console.error(err);
+                resolve( null );
             }
             else
             {
@@ -22,13 +23,14 @@ export function connect( host: string, port: number, unit: number )
 
 export async function read( connection: modbus.TCPStream, address: number )
 {
-    return new Promise<ResponseData>( ( resolve, reject ) =>
+    return new Promise<ResponseData|null>( ( resolve, reject ) =>
     {
         connection.readHoldingRegisters( { address: address, quantity: 1 }, ( err, res ) =>
         {
             if (err)
             {
-                reject( err );
+                console.error( err );
+                resolve(null);
             }
             else
             {
@@ -46,7 +48,8 @@ export async function write( connection: modbus.TCPStream, address: number, valu
         {
             if (err)
             {
-                reject( err );
+                console.error( err );
+                resolve();
             }
             else
             {
@@ -65,6 +68,7 @@ export async function close( connection: modbus.TCPStream )
             if ( err )
             {
                 console.error( err );
+                resolve();
             }
             else
             {
