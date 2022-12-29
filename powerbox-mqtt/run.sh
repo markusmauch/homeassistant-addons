@@ -13,7 +13,7 @@ POWERBOX_HOST="$(jq --raw-output '.powerbox_host' $CONFIG_PATH)"
 POWERBOX_PORT="$(jq --raw-output '.powerbox_port' $CONFIG_PATH)"
 POWERBOX_UNIT_ID="$(jq --raw-output '.powerbox_unit_id' $CONFIG_PATH)"
 
-tsc
-node ./out/index.js --poll_interval $POLL_INTERVAL --mqtt_host $MQTT_HOST --mqtt_username $MQTT_USERNAME --mqtt_password $MQTT_PASSWORD --topic $TOPIC --powerbox_host $POWERBOX_HOST --powerbox_port $POWERBOX_PORT --powerbox_unit_id $POWERBOX_UNIT_ID 
+./node_modules/typescript/bin/tsc
+node ./out/Index.js --poll_interval $POLL_INTERVAL --mqtt_host $MQTT_HOST --mqtt_username $MQTT_USERNAME --mqtt_password $MQTT_PASSWORD --topic $TOPIC --powerbox_host $POWERBOX_HOST --powerbox_port $POWERBOX_PORT --powerbox_unit_id $POWERBOX_UNIT_ID 
 
 tail -f /dev/null

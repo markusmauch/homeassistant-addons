@@ -1,0 +1,3 @@
+powerbox-mqtt/node_modules/*
+powerbox-mqtt/out/*
+powerbox-mqtt/package-lock.json
