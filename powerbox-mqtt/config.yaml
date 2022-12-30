@@ -1,6 +1,6 @@
 name: "powerbox-mqtt"
 description: "MQTT bridge for Maico Powerbox WS 75"
-version: "1.0.4"
+version: "1.0.5"
 slug: "powerbox-mqtt"
 init: false
 host_network: true
@@ -10,7 +10,6 @@ privileged:
 arch:
   - armv7
 options:
-  poll_interval: 60000
   mqtt_host: "homeassistant.local"
   mqtt_username: null
   mqtt_password: null
@@ -19,7 +18,6 @@ options:
   powerbox_port: 502
   powerbox_unit_id: 10
 schema:
-  poll_interval: int
   mqtt_host: str
   mqtt_username: str
   mqtt_password: password
