@@ -18,7 +18,7 @@ const options = commandLineArgs(optionDefinitions);
 const MQTT_HOST = options.mqtt_host;
 const MQTT_USERNAME = options.mqtt_username;
 const MQTT_PASSWORD = options.mqtt_password;
-const TOPIC = options.topic;
+const TOPIC = `homeassistant/sensor/${options.topic}`;
 const POWERBOX_HOST = options.powerbox_host;
 const POWERBOX_PORT = options.powerbox_port;
 const POWERBOX_UNIT_ID = options.powerbox_unit_id;
@@ -41,6 +41,15 @@ const modbusAddresses: { [key in Address]: number } = {
     "betriebsart": 550,
     "stossluftung": 551,
     "luftungsstufe": 554,
+};
+
+const entityNames: { [key in Address]: string } = {
+    aussentemperatur: `${TOPIC.toLowerCase()}_aussentemperatur`,
+    betriebsart: `${TOPIC.toLowerCase()}_betriebsart`,
+    luftfeuchtigkeit: `${TOPIC.toLowerCase()}_luftfeuchtigkeit`,
+    luftungsstufe: `${TOPIC.toLowerCase()}_luftungsstufe`,
+    raumtemperatur: `${TOPIC.toLowerCase()}_raumtemperatur`,
+    stossluftung: `${TOPIC.toLowerCase()}_stosslüftung`,
 };
 
 const queue = Queue();
@@ -67,6 +76,65 @@ mqttClient.subscribe(commandTopics, {qos: 0}, ( err, res ) =>
     }
 } );
 
+mqttClient.on( "connect", async () =>
+{
+    console.log( CYAN, `Announcing Entity '${entityNames["raumtemperatur"]}'` );
+    await Mqtt.publish( mqttClient, `${TOPIC}/raumtemperatur/config`, JSON.stringify( {
+        "name": entityNames["raumtemperatur"],
+        "device_class": "temperature",
+        "state_topic": `${TOPIC}/raumtemperatur/state`
+    } ) );
+
+    console.log(CYAN, `Announcing Entity '${entityNames["aussentemperatur"]}'`);
+    await Mqtt.publish( mqttClient, `${TOPIC}/aussentemperatur/config`, JSON.stringify( {
+        "name": entityNames["aussentemperatur"],
+        "device_class": "temperature",
+        "state_topic": `${TOPIC}/aussentemperatur/state`
+    } ) );
+
+    console.log(CYAN, `Announcing Entity '${entityNames["luftfeuchtigkeit"]}'`);
+    await Mqtt.publish( mqttClient, `${TOPIC}/luftfeuchtigkeit/config`, JSON.stringify( {
+        "name": entityNames["luftfeuchtigkeit"],
+        "device_class": "humidity",
+        "state_topic": `${TOPIC}/luftfeuchtigkeit/state`
+    } ) );
+
+    console.log(CYAN, `Announcing Entity '${entityNames["betriebsart"]}'`);
+    await Mqtt.publish( mqttClient, `${TOPIC}/betriebsart/config`, JSON.stringify( {
+        "name": entityNames["betriebsart"],
+        "state_topic": `${TOPIC}/betriebsart/state`
+    } ) );
+
+    console.log(CYAN, `Announcing Entity '${entityNames["luftungsstufe"]}'`);
+    await Mqtt.publish( mqttClient, `${TOPIC}/luftungsstufe/config`, JSON.stringify( {
+        "name": entityNames["luftungsstufe"],
+        "state_topic": `${TOPIC}/luftungsstufe/state`
+    } ) );
+
+    console.log( CYAN, "START Polling Data" );
+    Promise.all( [
+        ( async () =>
+        {
+            while ( true )
+            {
+                queue.push( () => readAndPublish( "raumtemperatur", `${TOPIC}/raumtemperatur/state`, 0.1, 1 ) );
+                queue.push( () => readAndPublish( "aussentemperatur", `${TOPIC}/aussentemperatur/state`, 0.1, 1 ) );
+                queue.push( () => readAndPublish( "luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit/state`, 1, 0 ) );
+                await delay(60000);
+            }
+        } )(),
+        ( async () =>
+        {
+            while ( true )
+            {
+                queue.push( () => readAndPublish( "betriebsart", `${TOPIC}/betriebsart/state`, 1, 0 ) );
+                queue.push( () => readAndPublish( "luftungsstufe", `${TOPIC}/luftungsstufe/state`, 1, 0 ) );
+                await delay(5000);
+            }
+        } )(),
+    ] );
+} );
+
 mqttClient.on( "message", ( topic, message, info )=>
 {
     const value = parseInt( message.toString() );
@@ -82,31 +150,6 @@ mqttClient.on( "message", ( topic, message, info )=>
             queue.push( () => write( "luftungsstufe", value ) );
         }
     }
-} );
-
-mqttClient.on( "connect", async () =>
-{
-    Promise.all( [
-        ( async () =>
-        {
-            while ( true )
-            {
-                queue.push( () => readAndPublish( "raumtemperatur", `${TOPIC}/raumtemperatur`, 0.1, 1 ) );
-                queue.push( () => readAndPublish( "aussentemperatur", `${TOPIC}/aussentemperatur`, 0.1, 1 ) );
-                queue.push( () => readAndPublish( "luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit`, 1, 0 ) );
-                await delay(60000);
-            }
-        } )(),
-        ( async () =>
-        {
-            while ( true )
-            {
-                queue.push( () => readAndPublish( "betriebsart", `${TOPIC}/betriebsart`, 1, 0 ) );
-                queue.push( () => readAndPublish( "luftungsstufe", `${TOPIC}/luftungsstufe`, 1, 0 ) );
-                await delay(5000);
-            }
-        } )(),
-    ] );
 } );
 
 async function write( address: Address, value: number )
@@ -150,8 +193,9 @@ function exitHandler( options: any, exitCode: any )
 {
     if (options.cleanup)
     {
-        console.log( CYAN, "Closing MQTT connection." );
+        console.log( CYAN, "END Polling Data" );
         queue.end();
+        console.log( CYAN, "Closing MQTT connection." );
         mqttClient.unsubscribe(commandTopics);
         mqttClient.end();
     }
