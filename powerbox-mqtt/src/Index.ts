@@ -22,7 +22,9 @@ const TOPIC = options.topic;
 const POWERBOX_HOST = options.powerbox_host;
 const POWERBOX_PORT = options.powerbox_port;
 const POWERBOX_UNIT_ID = options.powerbox_unit_id;
+
 const CYAN = '\x1b[36m%s\x1b[0m';
+const DELAY = 250;
 
 type Address = 
     | "raumtemperatur"
@@ -50,46 +52,6 @@ const commandTopics = [
     `${TOPIC}/luftungsstufe`,
 ];
 
-async function write( address: Address, value: number )
-{
-    const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
-    if ( modbusConnection !== null )
-    {
-        console.log( CYAN, `Writing value "${value}" to address "${address}"` );
-        const buffer = Buffer.from( [ 0, value ] );
-        await Modbus.write( modbusConnection, modbusAddresses[address], buffer );
-        await Modbus.close( modbusConnection );
-    }
-}
-
-async function readAndPublish(address: Address, topic: string, scale = 1, precision = 1)
-{
-    console.log( CYAN, `Reading value of '${address}'` );
-    const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
-    if ( modbusConnection !== null )
-    {
-        const result = await Modbus.read(modbusConnection, modbusAddresses[address]);
-        if ( result !== null )
-        {
-            const value = ( parseFloat( result.data[1].toString() ) * scale).toFixed( precision );
-            console.log( CYAN, `Publishing value '${value}' to topic '${topic}'` );
-            await Mqtt.publish(mqttClient, topic, value.toString());
-        }
-        await Modbus.close( modbusConnection );
-    }
-}
-
-async function delay( length: number )
-{
-    return new Promise<void>( (resolve, reject) =>
-    {
-        setTimeout( () => resolve(), length );
-    } );
-}
-
-
-
-
 const mqttClient = Mqtt.connect( `mqtt://${MQTT_HOST}`, MQTT_USERNAME, MQTT_PASSWORD );
 console.log( CYAN, `Connected to MQTT host '${MQTT_HOST}'` );
 
@@ -105,7 +67,7 @@ mqttClient.subscribe(commandTopics, {qos: 0}, ( err, res ) =>
     }
 } );
 
-mqttClient.on("message", ( topic, message, info )=>
+mqttClient.on( "message", ( topic, message, info )=>
 {
     const value = parseInt( message.toString() );
     if ( info.properties?.userProperties?.self !== "true" )
@@ -122,16 +84,16 @@ mqttClient.on("message", ( topic, message, info )=>
     }
 } );
 
-mqttClient.on( "connect", () =>
+mqttClient.on( "connect", async () =>
 {
     Promise.all( [
         ( async () =>
         {
             while ( true )
             {
-                queue.push( () => readAndPublish("raumtemperatur", `${TOPIC}/raumtemperatur`, 0.1, 1) );
-                queue.push( () => readAndPublish("aussentemperatur", `${TOPIC}/aussentemperatur`, 0.1, 1) );
-                queue.push( () => readAndPublish("luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit`, 1, 0) );
+                queue.push( () => readAndPublish( "raumtemperatur", `${TOPIC}/raumtemperatur`, 0.1, 1 ) );
+                queue.push( () => readAndPublish( "aussentemperatur", `${TOPIC}/aussentemperatur`, 0.1, 1 ) );
+                queue.push( () => readAndPublish( "luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit`, 1, 0 ) );
                 await delay(60000);
             }
         } )(),
@@ -139,15 +101,48 @@ mqttClient.on( "connect", () =>
         {
             while ( true )
             {
-                queue.push( () => readAndPublish("betriebsart", `${TOPIC}/betriebsart`, 1, 0) );
-                queue.push( () => readAndPublish("luftungsstufe", `${TOPIC}/luftungsstufe`, 1, 0) );
+                queue.push( () => readAndPublish( "betriebsart", `${TOPIC}/betriebsart`, 1, 0 ) );
+                queue.push( () => readAndPublish( "luftungsstufe", `${TOPIC}/luftungsstufe`, 1, 0 ) );
                 await delay(5000);
             }
         } )(),
     ] );
-
 } );
 
+async function write( address: Address, value: number )
+{
+    const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
+    console.log( CYAN, `START Writing value "${value}" to address "${address}"` );
+    const buffer = Buffer.from( [ 0, value ] );
+    await Modbus.write( modbusConnection, modbusAddresses[address], buffer );
+    await Modbus.close( modbusConnection );
+    await delay(DELAY);
+    console.log( CYAN, `END Writing value "${value}" to address "${address}"` );
+}
+
+async function readAndPublish(address: Address, topic: string, scale = 1, precision = 1)
+{
+    console.log( CYAN, `START Reading value of '${address}'` );
+    const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
+    const result = await Modbus.read(modbusConnection, modbusAddresses[address]);
+    if ( result !== null )
+    {
+        const value = ( parseFloat( result.data[1].toString() ) * scale).toFixed( precision );
+        console.log( CYAN, `Publishing value '${value}' to topic '${topic}'` );
+        await Mqtt.publish(mqttClient, topic, value.toString());
+    }
+    await Modbus.close( modbusConnection );
+    await delay(DELAY);
+    console.log( CYAN, `END Reading value of '${address}'` );
+}
+
+async function delay( length: number )
+{
+    return new Promise<void>( (resolve, reject) =>
+    {
+        setTimeout( () => resolve(), length );
+    } );
+}
 
 process.stdin.resume(); //so the program will not close instantly
 

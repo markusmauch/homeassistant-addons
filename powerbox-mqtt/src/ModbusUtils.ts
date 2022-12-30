@@ -4,45 +4,35 @@ export type ResponseData = { type: 'Buffer'; data: number[]; };
 
 export function connect( host: string, port: number, unit: number )
 {
-    return new Promise<modbus.TCPStream|null>( ( resolve, reject ) =>
+    return new Promise<modbus.TCPStream>( ( resolve, reject ) =>
     {
         modbus.tcp.connect( port, host, { unitId: 10 }, ( err, connection ) =>
         {
             if ( err )
             {
-                console.error( err );
-                ( async () =>
-                {
-                    await close( connection );
-                    resolve(null);
-                } )();
+                console.error(err);
             }
-            else
-            {
-                resolve( connection );
-            }
+            resolve( connection );
         } );
     } );
 }
 
+type Response = { data: number[] };
+
 export async function read( connection: modbus.TCPStream, address: number )
 {
-    return new Promise<ResponseData|null>( ( resolve, reject ) =>
+    return new Promise<Response|null>( ( resolve, reject ) =>
     {
         connection.readHoldingRegisters( { address: address, quantity: 1 }, ( err, res ) =>
         {
             if (err)
             {
                 console.error( err );
-                ( async () =>
-                {
-                    await close( connection );
-                    resolve(null);
-                } )();
+                resolve(null);
             }
             else
             {
-                resolve( res?.response.data[0].toJSON() as any );
+                resolve( res?.response.data[0].toJSON() as Response );
             }
         } )
     } );
