@@ -57,8 +57,8 @@ queue.concurrency = 1;
 queue.autostart = true;
 
 const commandTopics = [
-    `${TOPIC}/betriebsart`,
-    `${TOPIC}/luftungsstufe`,
+    `${TOPIC}/betriebsart/state`,
+    `${TOPIC}/luftungsstufe/state`,
 ];
 
 const mqttClient = Mqtt.connect( `mqtt://${MQTT_HOST}`, MQTT_USERNAME, MQTT_PASSWORD );
@@ -82,6 +82,7 @@ mqttClient.on( "connect", async () =>
     await Mqtt.publish( mqttClient, `${TOPIC}/raumtemperatur/config`, JSON.stringify( {
         "name": entityNames["raumtemperatur"],
         "device_class": "temperature",
+        "unit_of_measurement": "°C",
         "state_topic": `${TOPIC}/raumtemperatur/state`
     } ) );
 
@@ -89,6 +90,7 @@ mqttClient.on( "connect", async () =>
     await Mqtt.publish( mqttClient, `${TOPIC}/aussentemperatur/config`, JSON.stringify( {
         "name": entityNames["aussentemperatur"],
         "device_class": "temperature",
+        "unit_of_measurement": "°C",
         "state_topic": `${TOPIC}/aussentemperatur/state`
     } ) );
 
@@ -96,6 +98,7 @@ mqttClient.on( "connect", async () =>
     await Mqtt.publish( mqttClient, `${TOPIC}/luftfeuchtigkeit/config`, JSON.stringify( {
         "name": entityNames["luftfeuchtigkeit"],
         "device_class": "humidity",
+        "unit_of_measurement": "%",
         "state_topic": `${TOPIC}/luftfeuchtigkeit/state`
     } ) );
 
@@ -141,11 +144,11 @@ mqttClient.on( "message", ( topic, message, info )=>
     if ( info.properties?.userProperties?.self !== "true" )
     {
         queue.splice(0);
-        if ( topic === `${TOPIC}/betriebsart` )
+        if ( topic === `${TOPIC}/betriebsart/state` )
         {
             queue.push( () => write( "betriebsart", value ) );
         }
-        else if ( topic === `${TOPIC}/luftungsstufe` )
+        else if ( topic === `${TOPIC}/luftungsstufe/state` )
         {
             queue.push( () => write( "luftungsstufe", value ) );
         }
