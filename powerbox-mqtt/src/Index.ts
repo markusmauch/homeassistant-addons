@@ -18,7 +18,7 @@ const options = commandLineArgs(optionDefinitions);
 const MQTT_HOST = options.mqtt_host;
 const MQTT_USERNAME = options.mqtt_username;
 const MQTT_PASSWORD = options.mqtt_password;
-const TOPIC = `homeassistant/sensor/${options.topic}`;
+const TOPIC = options.topic;
 const POWERBOX_HOST = options.powerbox_host;
 const POWERBOX_PORT = options.powerbox_port;
 const POWERBOX_UNIT_ID = options.powerbox_unit_id;
@@ -32,6 +32,7 @@ type Address =
     | "luftfeuchtigkeit"
     | "betriebsart"
     | "stossluftung"
+    | "einschlaffunktion"
     | "luftungsstufe";
 
 const modbusAddresses: { [key in Address]: number } = {
@@ -41,30 +42,34 @@ const modbusAddresses: { [key in Address]: number } = {
     "betriebsart": 550,
     "stossluftung": 551,
     "luftungsstufe": 554,
+    "einschlaffunktion": 559,
 };
 
 const entityNames: { [key in Address]: string } = {
-    aussentemperatur: `${TOPIC.toLowerCase()}_aussentemperatur`,
-    betriebsart: `${TOPIC.toLowerCase()}_betriebsart`,
-    luftfeuchtigkeit: `${TOPIC.toLowerCase()}_luftfeuchtigkeit`,
-    luftungsstufe: `${TOPIC.toLowerCase()}_luftungsstufe`,
-    raumtemperatur: `${TOPIC.toLowerCase()}_raumtemperatur`,
-    stossluftung: `${TOPIC.toLowerCase()}_stosslüftung`,
+    aussentemperatur: `${TOPIC}_aussentemperatur`,
+    betriebsart: `${TOPIC}_betriebsart`,
+    luftfeuchtigkeit: `${TOPIC}_luftfeuchtigkeit`,
+    luftungsstufe: `${TOPIC}_luftungsstufe`,
+    raumtemperatur: `${TOPIC}_raumtemperatur`,
+    stossluftung: `${TOPIC}_stossluftung`,
+    einschlaffunktion: `${TOPIC}_einschlaffunktion`,
 };
 
 const queue = Queue();
 queue.concurrency = 1;
 queue.autostart = true;
 
-const commandTopics = [
-    `${TOPIC}/betriebsart/state`,
-    `${TOPIC}/luftungsstufe/state`,
-];
-
 const mqttClient = Mqtt.connect( `mqtt://${MQTT_HOST}`, MQTT_USERNAME, MQTT_PASSWORD );
 console.log( CYAN, `Connected to MQTT host '${MQTT_HOST}'` );
 
-mqttClient.subscribe(commandTopics, {qos: 0}, ( err, res ) =>
+const subscriptions = [
+    `homeassistant/sensor/${TOPIC}/betriebsart/state`,
+    `homeassistant/sensor/${TOPIC}/luftungsstufe/state`,
+    `homeassistant/binary_sensor/${TOPIC}/stossluftung/state`,
+    `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/state`,
+];
+
+mqttClient.subscribe(subscriptions, {qos: 0}, ( err, res ) =>
 {
     if ( err )
     {
@@ -72,102 +77,99 @@ mqttClient.subscribe(commandTopics, {qos: 0}, ( err, res ) =>
     }
     else
     {
-        commandTopics.forEach( topic => console.log( CYAN, `Subscribed to topic "${topic}"` ) );
+        subscriptions.forEach( topic => console.log( CYAN, `Subscribed to topic "${topic}"` ) );
     }
 } );
 
 mqttClient.on( "connect", async () =>
 {
     console.log( CYAN, `Announcing Entity '${entityNames["raumtemperatur"]}'` );
-    await Mqtt.publish( mqttClient, `${TOPIC}/raumtemperatur/config`, JSON.stringify( {
+    await Mqtt.publish( mqttClient, `homeassistant/sensor/${TOPIC}/raumtemperatur/config`, JSON.stringify( {
         "name": entityNames["raumtemperatur"],
         "device_class": "temperature",
         "unit_of_measurement": "°C",
-        "state_topic": `${TOPIC}/raumtemperatur/state`
+        "state_topic": `homeassistant/sensor/${TOPIC}/raumtemperatur/state`
     } ) );
 
     console.log(CYAN, `Announcing Entity '${entityNames["aussentemperatur"]}'`);
-    await Mqtt.publish( mqttClient, `${TOPIC}/aussentemperatur/config`, JSON.stringify( {
+    await Mqtt.publish( mqttClient, `homeassistant/sensor/${TOPIC}/aussentemperatur/config`, JSON.stringify( {
         "name": entityNames["aussentemperatur"],
         "device_class": "temperature",
         "unit_of_measurement": "°C",
-        "state_topic": `${TOPIC}/aussentemperatur/state`
+        "state_topic": `homeassistant/sensor/${TOPIC}/aussentemperatur/state`
     } ) );
 
     console.log(CYAN, `Announcing Entity '${entityNames["luftfeuchtigkeit"]}'`);
-    await Mqtt.publish( mqttClient, `${TOPIC}/luftfeuchtigkeit/config`, JSON.stringify( {
+    await Mqtt.publish( mqttClient, `homeassistant/sensor/${TOPIC}/luftfeuchtigkeit/config`, JSON.stringify( {
         "name": entityNames["luftfeuchtigkeit"],
         "device_class": "humidity",
         "unit_of_measurement": "%",
-        "state_topic": `${TOPIC}/luftfeuchtigkeit/state`
+        "state_topic": `homeassistant/sensor/${TOPIC}/luftfeuchtigkeit/state`
     } ) );
 
     console.log(CYAN, `Announcing Entity '${entityNames["betriebsart"]}'`);
-    await Mqtt.publish( mqttClient, `${TOPIC}/betriebsart/config`, JSON.stringify( {
+    await Mqtt.publish( mqttClient, `homeassistant/sensor/${TOPIC}/betriebsart/config`, JSON.stringify( {
         "name": entityNames["betriebsart"],
-        "state_topic": `${TOPIC}/betriebsart/state`
+        "state_topic": `homeassistant/sensor/${TOPIC}/betriebsart/state`,
+        "icon": "mdi:power"
     } ) );
 
-    console.log(CYAN, `Announcing Entity '${entityNames["luftungsstufe"]}'`);
-    await Mqtt.publish( mqttClient, `${TOPIC}/luftungsstufe/config`, JSON.stringify( {
-        "name": entityNames["luftungsstufe"],
-        "state_topic": `${TOPIC}/luftungsstufe/state`
+    console.log(CYAN, `Announcing Entity '${entityNames["stossluftung"]}'`);
+    await Mqtt.publish( mqttClient, `homeassistant/binary_sensor/${TOPIC}/stossluftung/config`, JSON.stringify( {
+        "name": entityNames["stossluftung"],
+        "state_topic": `homeassistant/binary_sensor/${TOPIC}/stossluftung/state`,
+        "icon": "mdi:weather-dust"
+    } ) );
+
+    console.log(CYAN, `Announcing Entity '${entityNames["einschlaffunktion"]}'`);
+    await Mqtt.publish( mqttClient, `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/config`, JSON.stringify( {
+        "name": entityNames["einschlaffunktion"],
+        "state_topic": `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/state`,
+        "icon": "mdi:bed-clock"
     } ) );
 
     console.log( CYAN, "START Polling Data" );
     while ( true )
     {
-        for ( let i = 0; i < 60; i++ )
+        for ( let i = 0; i < 70; i++ )
         {
-            if ( i % 5 === 0 )
+            if ( i % 7 === 0 )
             {
-                queue.push( () => readAndPublish( "betriebsart", `${TOPIC}/betriebsart/state`, 1, 0 ) );
+                queue.push( () => readAndPublish( "betriebsart", `homeassistant/sensor/${TOPIC}/betriebsart/state`, 1, 0 ) );
             }
-            else if ( i % 5 === 1 )
+            else if ( i % 7 === 1 )
             {
-                queue.push( () => readAndPublish( "luftungsstufe", `${TOPIC}/luftungsstufe/state`, 1, 0 ) );
+                queue.push( () => readAndPublish( "luftungsstufe", `homeassistant/sensor/${TOPIC}/luftungsstufe/state`, 1, 0 ) );
             }
-            else if ( i === 2 )
+            else if ( i % 7 === 2 )
             {
-                queue.push( () => readAndPublish( "raumtemperatur", `${TOPIC}/raumtemperatur/state`, 0.1, 1 ) );
+                queue.push( () => readAndPublish( "stossluftung", `homeassistant/binary_sensor/${TOPIC}/stossluftung/state`, 1, 0 ) );
             }
-            else if ( i === 3 )
+            else if ( i % 7 === 3 )
             {
-                queue.push( () => readAndPublish( "aussentemperatur", `${TOPIC}/aussentemperatur/state`, 0.1, 1 ) );
+                queue.push( () => readAndPublish( "einschlaffunktion", `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/state`, 1, 0 ) );
             }
             else if ( i === 4 )
             {
-                queue.push( () => readAndPublish( "luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit/state`, 1, 0 ) );
+                queue.push( () => readAndPublish( "raumtemperatur", `homeassistant/sensor/${TOPIC}/raumtemperatur/state`, 0.1, 1 ) );
             }
-            delay(1000);
+            else if ( i === 5 )
+            {
+                queue.push( () => readAndPublish( "aussentemperatur", `homeassistant/sensor/${TOPIC}/aussentemperatur/state`, 0.1, 1 ) );
+            }
+            else if ( i === 6 )
+            {
+                queue.push( () => readAndPublish( "luftfeuchtigkeit", `homeassistant/sensor/${TOPIC}/luftfeuchtigkeit/state`, 1, 0 ) );
+            }
+            await delay(1000);
         }
-        if ( queue.length > 60 )
+        if ( queue.length > 70 )
         {
-            throw new Error( "Maximum queue length exceeded" );
+            console.log( CYAN, "Maximum queue length exceeded" );
+            queue.splice(0);
+            await delay(60000);
         }
     }
-
-    // Promise.all( [
-    //     ( async () =>
-    //     {
-    //         while ( true )
-    //         {
-    //             queue.push( () => readAndPublish( "raumtemperatur", `${TOPIC}/raumtemperatur/state`, 0.1, 1 ) );
-    //             queue.push( () => readAndPublish( "aussentemperatur", `${TOPIC}/aussentemperatur/state`, 0.1, 1 ) );
-    //             queue.push( () => readAndPublish( "luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit/state`, 1, 0 ) );
-    //             await delay(60000);
-    //         }
-    //     } )(),
-    //     ( async () =>
-    //     {
-    //         while ( true )
-    //         {
-    //             queue.push( () => readAndPublish( "betriebsart", `${TOPIC}/betriebsart/state`, 1, 0 ) );
-    //             queue.push( () => readAndPublish( "luftungsstufe", `${TOPIC}/luftungsstufe/state`, 1, 0 ) );
-    //             await delay(5000);
-    //         }
-    //     } )(),
-    // ] );
 } );
 
 mqttClient.on( "message", ( topic, message, info )=>
@@ -176,13 +178,21 @@ mqttClient.on( "message", ( topic, message, info )=>
     if ( info.properties?.userProperties?.self !== "true" )
     {
         queue.splice(0);
-        if ( topic === `${TOPIC}/betriebsart/state` )
+        if ( topic === `homeassistant/sensor/${TOPIC}/betriebsart/state` )
         {
             queue.push( () => write( "betriebsart", value ) );
         }
-        else if ( topic === `${TOPIC}/luftungsstufe/state` )
+        else if ( topic === `homeassistant/sensor/${TOPIC}/luftungsstufe/state` )
         {
             queue.push( () => write( "luftungsstufe", value ) );
+        }
+        else if ( topic === `homeassistant/binary_sensor/${TOPIC}/stossluftung/state` )
+        {
+            queue.push( () => write( "stossluftung", value ) );
+        }
+        else if ( topic === `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/state` )
+        {
+            queue.push( () => write( "einschlaffunktion", value ) );
         }
     }
 } );
@@ -229,7 +239,7 @@ function exitHandler( options: any, exitCode: any )
         console.log( CYAN, "END Polling Data" );
         queue.end();
         console.log( CYAN, "Closing MQTT connection." );
-        mqttClient.unsubscribe(commandTopics);
+        mqttClient.unsubscribe(subscriptions);
         mqttClient.end();
     }
     if (exitCode || exitCode === 0)
