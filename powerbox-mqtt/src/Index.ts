@@ -115,27 +115,59 @@ mqttClient.on( "connect", async () =>
     } ) );
 
     console.log( CYAN, "START Polling Data" );
-    Promise.all( [
-        ( async () =>
+    while ( true )
+    {
+        for ( let i = 0; i < 60; i++ )
         {
-            while ( true )
-            {
-                queue.push( () => readAndPublish( "raumtemperatur", `${TOPIC}/raumtemperatur/state`, 0.1, 1 ) );
-                queue.push( () => readAndPublish( "aussentemperatur", `${TOPIC}/aussentemperatur/state`, 0.1, 1 ) );
-                queue.push( () => readAndPublish( "luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit/state`, 1, 0 ) );
-                await delay(60000);
-            }
-        } )(),
-        ( async () =>
-        {
-            while ( true )
+            if ( i % 5 === 0 )
             {
                 queue.push( () => readAndPublish( "betriebsart", `${TOPIC}/betriebsart/state`, 1, 0 ) );
-                queue.push( () => readAndPublish( "luftungsstufe", `${TOPIC}/luftungsstufe/state`, 1, 0 ) );
-                await delay(5000);
             }
-        } )(),
-    ] );
+            else if ( i % 5 === 1 )
+            {
+                queue.push( () => readAndPublish( "luftungsstufe", `${TOPIC}/luftungsstufe/state`, 1, 0 ) );
+            }
+            else if ( i === 2 )
+            {
+                queue.push( () => readAndPublish( "raumtemperatur", `${TOPIC}/raumtemperatur/state`, 0.1, 1 ) );
+            }
+            else if ( i === 3 )
+            {
+                queue.push( () => readAndPublish( "aussentemperatur", `${TOPIC}/aussentemperatur/state`, 0.1, 1 ) );
+            }
+            else if ( i === 4 )
+            {
+                queue.push( () => readAndPublish( "luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit/state`, 1, 0 ) );
+            }
+            delay(1000);
+        }
+        if ( queue.length > 60 )
+        {
+            throw new Error( "Maximum queue length exceeded" );
+        }
+    }
+
+    // Promise.all( [
+    //     ( async () =>
+    //     {
+    //         while ( true )
+    //         {
+    //             queue.push( () => readAndPublish( "raumtemperatur", `${TOPIC}/raumtemperatur/state`, 0.1, 1 ) );
+    //             queue.push( () => readAndPublish( "aussentemperatur", `${TOPIC}/aussentemperatur/state`, 0.1, 1 ) );
+    //             queue.push( () => readAndPublish( "luftfeuchtigkeit", `${TOPIC}/luftfeuchtigkeit/state`, 1, 0 ) );
+    //             await delay(60000);
+    //         }
+    //     } )(),
+    //     ( async () =>
+    //     {
+    //         while ( true )
+    //         {
+    //             queue.push( () => readAndPublish( "betriebsart", `${TOPIC}/betriebsart/state`, 1, 0 ) );
+    //             queue.push( () => readAndPublish( "luftungsstufe", `${TOPIC}/luftungsstufe/state`, 1, 0 ) );
+    //             await delay(5000);
+    //         }
+    //     } )(),
+    // ] );
 } );
 
 mqttClient.on( "message", ( topic, message, info )=>
@@ -162,7 +194,6 @@ async function write( address: Address, value: number )
     const buffer = Buffer.from( [ 0, value ] );
     await Modbus.write( modbusConnection, modbusAddresses[address], buffer );
     await Modbus.close( modbusConnection );
-    await delay(DELAY);
     console.log( CYAN, `END Writing value "${value}" to address "${address}"` );
 }
 
@@ -178,7 +209,6 @@ async function readAndPublish(address: Address, topic: string, scale = 1, precis
         await Mqtt.publish(mqttClient, topic, value.toString());
     }
     await Modbus.close( modbusConnection );
-    await delay(DELAY);
     console.log( CYAN, `END Reading value of '${address}'` );
 }
 

@@ -14,5 +14,3 @@ POWERBOX_UNIT_ID="$(jq --raw-output '.powerbox_unit_id' $CONFIG_PATH)"
 
 ./node_modules/typescript/bin/tsc
 node ./out/Index.js --mqtt_host $MQTT_HOST --mqtt_username $MQTT_USERNAME --mqtt_password $MQTT_PASSWORD --topic $TOPIC --powerbox_host $POWERBOX_HOST --powerbox_port $POWERBOX_PORT --powerbox_unit_id $POWERBOX_UNIT_ID 
-
-tail -f /dev/null
