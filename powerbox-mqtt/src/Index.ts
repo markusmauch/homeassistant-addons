@@ -1,6 +1,7 @@
 import * as Modbus from "./ModbusUtils";
 import * as Mqtt from "./MqttUtils";
 import Queue from "queue";
+import schedule from "node-schedule";
 import commandLineArgs, { OptionDefinition } from "command-line-args";
 
 const optionDefinitions: OptionDefinition[] = [
@@ -128,48 +129,16 @@ mqttClient.on( "connect", async () =>
         "icon": "mdi:bed-clock"
     } ) );
 
+    
     console.log( CYAN, "START Polling Data" );
-    while ( true )
-    {
-        for ( let i = 0; i < 70; i++ )
-        {
-            if ( i % 7 === 0 )
-            {
-                queue.push( () => readAndPublish( "betriebsart", `homeassistant/sensor/${TOPIC}/betriebsart/state`, 1, 0 ) );
-            }
-            else if ( i % 7 === 1 )
-            {
-                queue.push( () => readAndPublish( "luftungsstufe", `homeassistant/sensor/${TOPIC}/luftungsstufe/state`, 1, 0 ) );
-            }
-            else if ( i % 7 === 2 )
-            {
-                queue.push( () => readAndPublish( "stossluftung", `homeassistant/binary_sensor/${TOPIC}/stossluftung/state`, 1, 0 ) );
-            }
-            else if ( i % 7 === 3 )
-            {
-                queue.push( () => readAndPublish( "einschlaffunktion", `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/state`, 1, 0 ) );
-            }
-            else if ( i === 4 )
-            {
-                queue.push( () => readAndPublish( "raumtemperatur", `homeassistant/sensor/${TOPIC}/raumtemperatur/state`, 0.1, 1 ) );
-            }
-            else if ( i === 5 )
-            {
-                queue.push( () => readAndPublish( "aussentemperatur", `homeassistant/sensor/${TOPIC}/aussentemperatur/state`, 0.1, 1 ) );
-            }
-            else if ( i === 6 )
-            {
-                queue.push( () => readAndPublish( "luftfeuchtigkeit", `homeassistant/sensor/${TOPIC}/luftfeuchtigkeit/state`, 1, 0 ) );
-            }
-            await delay(1000);
-        }
-        if ( queue.length > 70 )
-        {
-            console.log( CYAN, "Maximum queue length exceeded" );
-            queue.splice(0);
-            await delay(60000);
-        }
-    }
+
+    schedule.scheduleJob( "0/10 * * * * *", () => { queue.push( () => readAndPublish( "betriebsart", `homeassistant/sensor/${TOPIC}/betriebsart/state`, 1, 0 ) ) } );
+    schedule.scheduleJob( "15/10 * * * * *", () => { queue.push( () => readAndPublish( "luftungsstufe", `homeassistant/sensor/${TOPIC}/luftungsstufe/state`, 1, 0 ) ) } );
+    schedule.scheduleJob( "30/10 * * * * *", () => { queue.push( () => readAndPublish( "stossluftung", `homeassistant/binary_sensor/${TOPIC}/stossluftung/state`, 1, 0 ) ) } );
+    schedule.scheduleJob( "45/10 * * * * *", () => { queue.push( () => readAndPublish( "einschlaffunktion", `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/state`, 1, 0 ) ) } );
+    schedule.scheduleJob( "10/60 * * * * *", () => { queue.push( () => readAndPublish( "raumtemperatur", `homeassistant/sensor/${TOPIC}/raumtemperatur/state`, 0.1, 1 ) ) } );
+    schedule.scheduleJob( "20/60 * * * * *", () => { queue.push( () => readAndPublish( "aussentemperatur", `homeassistant/sensor/${TOPIC}/aussentemperatur/state`, 0.1, 1 ) ) } );
+    schedule.scheduleJob( "30/60 * * * * *", () => { queue.push( () => readAndPublish( "luftfeuchtigkeit", `homeassistant/sensor/${TOPIC}/luftfeuchtigkeit/state`, 1, 0 ) ) } );
 } );
 
 mqttClient.on( "message", ( topic, message, info )=>
@@ -177,7 +146,6 @@ mqttClient.on( "message", ( topic, message, info )=>
     const value = parseInt( message.toString() );
     if ( info.properties?.userProperties?.self !== "true" )
     {
-        queue.splice(0);
         if ( topic === `homeassistant/sensor/${TOPIC}/betriebsart/state` )
         {
             queue.push( () => write( "betriebsart", value ) );
@@ -199,26 +167,30 @@ mqttClient.on( "message", ( topic, message, info )=>
 
 async function write( address: Address, value: number )
 {
-    const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
     console.log( CYAN, `START Writing value "${value}" to address "${address}"` );
+    const connection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
+    connection.on("error", () => connection.close(() => {}));
     const buffer = Buffer.from( [ 0, value ] );
-    await Modbus.write( modbusConnection, modbusAddresses[address], buffer );
-    await Modbus.close( modbusConnection );
+    await Modbus.write( connection, modbusAddresses[address], buffer );
+    await Modbus.close( connection );
+    await delay(1000);
     console.log( CYAN, `END Writing value "${value}" to address "${address}"` );
 }
 
 async function readAndPublish(address: Address, topic: string, scale = 1, precision = 1)
 {
     console.log( CYAN, `START Reading value of '${address}'` );
-    const modbusConnection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
-    const result = await Modbus.read(modbusConnection, modbusAddresses[address]);
+    const connection = await Modbus.connect( POWERBOX_HOST, POWERBOX_PORT, POWERBOX_UNIT_ID );
+    connection.on("error", () => connection.close(() => {}));
+    const result = await Modbus.read(connection, modbusAddresses[address]);
     if ( result !== null )
     {
         const value = ( parseFloat( result.data[1].toString() ) * scale).toFixed( precision );
         console.log( CYAN, `Publishing value '${value}' to topic '${topic}'` );
         await Mqtt.publish(mqttClient, topic, value.toString());
     }
-    await Modbus.close( modbusConnection );
+    await Modbus.close( connection );
+    await delay(1000);
     console.log( CYAN, `END Reading value of '${address}'` );
 }
 
