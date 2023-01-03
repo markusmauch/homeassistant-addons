@@ -90,7 +90,7 @@ mqttClient.on( "connect", async () =>
         "device_class": "temperature",
         "unit_of_measurement": "°C",
         "state_topic": `homeassistant/sensor/${TOPIC}/raumtemperatur/state`
-    } ) );
+    } ), true );
 
     console.log(CYAN, `Announcing Entity '${entityNames["aussentemperatur"]}'`);
     await Mqtt.publish( mqttClient, `homeassistant/sensor/${TOPIC}/aussentemperatur/config`, JSON.stringify( {
@@ -98,7 +98,7 @@ mqttClient.on( "connect", async () =>
         "device_class": "temperature",
         "unit_of_measurement": "°C",
         "state_topic": `homeassistant/sensor/${TOPIC}/aussentemperatur/state`
-    } ) );
+    } ), true );
 
     console.log(CYAN, `Announcing Entity '${entityNames["luftfeuchtigkeit"]}'`);
     await Mqtt.publish( mqttClient, `homeassistant/sensor/${TOPIC}/luftfeuchtigkeit/config`, JSON.stringify( {
@@ -106,28 +106,28 @@ mqttClient.on( "connect", async () =>
         "device_class": "humidity",
         "unit_of_measurement": "%",
         "state_topic": `homeassistant/sensor/${TOPIC}/luftfeuchtigkeit/state`
-    } ) );
+    } ), true );
 
     console.log(CYAN, `Announcing Entity '${entityNames["betriebsart"]}'`);
     await Mqtt.publish( mqttClient, `homeassistant/sensor/${TOPIC}/betriebsart/config`, JSON.stringify( {
         "name": entityNames["betriebsart"],
         "state_topic": `homeassistant/sensor/${TOPIC}/betriebsart/state`,
         "icon": "mdi:power"
-    } ) );
+    } ), true );
 
     console.log(CYAN, `Announcing Entity '${entityNames["stossluftung"]}'`);
     await Mqtt.publish( mqttClient, `homeassistant/binary_sensor/${TOPIC}/stossluftung/config`, JSON.stringify( {
         "name": entityNames["stossluftung"],
         "state_topic": `homeassistant/binary_sensor/${TOPIC}/stossluftung/state`,
         "icon": "mdi:weather-dust"
-    } ) );
+    } ),true );
 
     console.log(CYAN, `Announcing Entity '${entityNames["einschlaffunktion"]}'`);
     await Mqtt.publish( mqttClient, `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/config`, JSON.stringify( {
         "name": entityNames["einschlaffunktion"],
         "state_topic": `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/state`,
         "icon": "mdi:bed-clock"
-    } ) );
+    } ), true );
 
     
     console.log( CYAN, "START Polling Data" );

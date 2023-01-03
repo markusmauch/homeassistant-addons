@@ -5,12 +5,12 @@ export function connect( host: string, username: string, password: string )
     return mqtt.connect( host, { username: username, password: password, protocolVersion: 5 } );
 }
 
-export async function publish( client: mqtt.MqttClient, topic: string, message: string )
+export async function publish( client: mqtt.MqttClient, topic: string, message: string, retain = false)
 {
        
     return new Promise<mqtt.Packet | undefined>( ( resolve, reject ) =>
     {
-        client.publish( topic, message, { properties: { userProperties: { self: "true" } } }, ( err, packet ) =>
+        client.publish( topic, message, { retain: retain, properties: { userProperties: { self: "true" } } }, ( err, packet ) =>
         {
             if ( err )
             {
