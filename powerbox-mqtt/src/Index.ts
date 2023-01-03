@@ -119,14 +119,18 @@ mqttClient.on( "connect", async () =>
     await Mqtt.publish( mqttClient, `homeassistant/binary_sensor/${TOPIC}/stossluftung/config`, JSON.stringify( {
         "name": entityNames["stossluftung"],
         "state_topic": `homeassistant/binary_sensor/${TOPIC}/stossluftung/state`,
-        "icon": "mdi:weather-dust"
+        "icon": "mdi:weather-dust",
+        "payload_on": 1,
+        "payload_off": 0
     } ),true );
 
     console.log(CYAN, `Announcing Entity '${entityNames["einschlaffunktion"]}'`);
     await Mqtt.publish( mqttClient, `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/config`, JSON.stringify( {
         "name": entityNames["einschlaffunktion"],
         "state_topic": `homeassistant/binary_sensor/${TOPIC}/einschlaffunktion/state`,
-        "icon": "mdi:bed-clock"
+        "icon": "mdi:bed-clock",
+        "payload_on": 1,
+        "payload_off": 0
     } ), true );
 
     
