@@ -115,6 +115,13 @@ mqttClient.on( "connect", async () =>
         "icon": "mdi:power"
     } ), true );
 
+    console.log(CYAN, `Announcing Entity '${entityNames["luftungsstufe"]}'`);
+    await Mqtt.publish( mqttClient, `homeassistant/sensor/${TOPIC}/luftungsstufe/config`, JSON.stringify( {
+        "name": entityNames["luftungsstufe"],
+        "state_topic": `homeassistant/sensor/${TOPIC}/luftungsstufe/state`,
+        "icon": "mdi:fan"
+    } ), true );
+
     console.log(CYAN, `Announcing Entity '${entityNames["stossluftung"]}'`);
     await Mqtt.publish( mqttClient, `homeassistant/binary_sensor/${TOPIC}/stossluftung/config`, JSON.stringify( {
         "name": entityNames["stossluftung"],
