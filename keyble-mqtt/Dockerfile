@@ -1,3 +1,7 @@
+FROM node:14.21.2-alpine AS node
+
+FROM base
+
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
@@ -8,8 +12,16 @@ RUN \
         build-base \
         libgudev-dev \
         bluez-libs \
-        nodejs=12.22.12-r0 \
         npm
+
+# nodejs
+
+# copy node v14 manually
+COPY --from=node /usr/lib /usr/lib
+COPY --from=node /usr/local/share /usr/local/share
+COPY --from=node /usr/local/lib /usr/local/lib
+COPY --from=node /usr/local/include /usr/local/include
+COPY --from=node /usr/local/bin /usr/local/bin
 
 COPY run.sh /
 RUN npm install --update --global --unsafe-perm keyble
