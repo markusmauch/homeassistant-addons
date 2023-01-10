@@ -11,12 +11,12 @@ HOST="$(jq --raw-output '.host' $CONFIG_PATH)"
 USERNAME="$(jq --raw-output '.username' $CONFIG_PATH)"
 PASSWORD="$(jq --raw-output '.password' $CONFIG_PATH)"
 
-# echo ADDRESS: $ADDRESS
-# echo USER_ID: $USER_ID
-# echo USER_KEY: $USER_KEY
-# echo HOST: $HOST
-# echo USERNAME: $USERNAME
-# echo PASSWORD: $PASSWORD
+echo ADDRESS: $ADDRESS
+echo USER_ID: $USER_ID
+echo USER_KEY: $USER_KEY
+echo HOST: $HOST
+echo USERNAME: $USERNAME
+echo PASSWORD: $PASSWORD
 
-keyble-mqtt --host $HOST --username $USERNAME --password $PASSWORD $ADDRESS $USER_ID $USER_KEY
+keyble-mqtt $ADDRESS $USER_ID $USER_KEY --host $HOST --username $USERNAME --password $PASSWORD
 tail -f /dev/null
