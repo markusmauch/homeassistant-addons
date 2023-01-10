@@ -1,7 +1,5 @@
 FROM node:14.21.2-alpine AS node
 
-FROM base
-
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
