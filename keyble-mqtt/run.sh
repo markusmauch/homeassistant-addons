@@ -18,5 +18,5 @@ PASSWORD="$(jq --raw-output '.password' $CONFIG_PATH)"
 # echo USERNAME: $USERNAME
 # echo PASSWORD: $PASSWORD
 
-keyble-mqtt $ADDRESS $USER_ID $USER_KEY --host $HOST--username $USERNAME --password $PASSWORD
+keyble-mqtt --host $HOST--username $USERNAME --password $PASSWORD $ADDRESS $USER_ID $USER_KEY
 tail -f /dev/null
