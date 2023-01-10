@@ -8,7 +8,7 @@ RUN \
         build-base \
         libgudev-dev \
         bluez-libs \
-        nodejs \
+        nodejs=14.21.2 \
         npm
 
 COPY run.sh /
