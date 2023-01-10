@@ -1,6 +1,6 @@
 name: "keyble-mqtt"
 description: "Eqiva Smart Lock Bluetooth MQTT"
-version: "1.0.8"
+version: "1.0.9"
 slug: "keyble-mqtt"
 init: false
 host_network: true
@@ -13,11 +13,13 @@ options:
   address: ""
   user_id: 0
   user_key: ""
+  host: "192.168.0.1"
   username: ""
   password: ""
 schema:
   address: str
   user_id: int
   user_key: str
+  host: str
   username: str
   password: str

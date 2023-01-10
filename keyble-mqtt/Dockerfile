@@ -22,8 +22,7 @@ COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
 COPY run.sh /
-RUN npm install --update --global --unsafe-perm keyble
-# keyble-mqtt
+# RUN npm install --update --global --unsafe-perm keyble
+RUN npm install --update --global --unsafe-perm keyble-mqtt
 RUN chmod a+x /run.sh
-
 CMD [ "/run.sh" ]
