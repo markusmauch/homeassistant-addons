@@ -1,6 +1,6 @@
-FROM node:14.21.2-alpine AS node
-
 ARG BUILD_FROM
+
+FROM node:14.21.2-alpine AS node
 FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
