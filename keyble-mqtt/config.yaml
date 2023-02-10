@@ -4,29 +4,22 @@ version: "1.0.13"
 slug: "keyble-mqtt"
 init: false
 host_network: true
-# full_access: true
-# host_dbus: true
 privileged:
   - NET_ADMIN
   - SYS_ADMIN
-  # - SYS_RAWIO
-  # - SYS_TIME
-  # - SYS_NICE
-  # - SYS_RESOURCE
-  # - SYS_PTRACE
-  # - SYS_MODULE
-  # - DAC_READ_SEARCH
 arch:
   - armv7
 options:
   address: ""
   user_id: 0
   user_key: ""
+  host: "192.168.0.1"
   username: ""
   password: ""
 schema:
   address: str
   user_id: int
   user_key: str
+  host: str
   username: str
   password: str
