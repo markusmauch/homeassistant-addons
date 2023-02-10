@@ -18,5 +18,5 @@ echo HOST: $HOST
 echo USERNAME: $USERNAME
 echo PASSWORD: $PASSWORD
 
-keyble-mqtt $ADDRESS $USER_ID $USER_KEY --host $HOST --username $USERNAME --password $PASSWORD
+#keyble-mqtt $ADDRESS $USER_ID $USER_KEY --host $HOST --username $USERNAME --password $PASSWORD
 tail -f /dev/null
