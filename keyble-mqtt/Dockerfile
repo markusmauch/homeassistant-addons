@@ -5,7 +5,7 @@ FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
 
-VOLUME /var/run/dbus/
+VOLUME /var/run/dbus/:/var/run/dbus/:z
 
 RUN \ 
     apk add --no-cache \
