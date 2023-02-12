@@ -5,15 +5,17 @@ FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
 
+VOLUME /var/run/dbus/
+
 RUN \ 
     apk add --no-cache \
         build-base \
         libgudev-dev \
+        bluez-utils \
         bluez-libs \
         npm
 
 # nodejs
-
 # copy node v14 manually
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/share /usr/local/share
