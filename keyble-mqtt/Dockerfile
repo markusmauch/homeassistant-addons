@@ -9,6 +9,7 @@ VOLUME /var/run/dbus/
 
 RUN \ 
     apk add --no-cache \
+        openrc \
         build-base \
         libgudev-dev \
         bluez \
