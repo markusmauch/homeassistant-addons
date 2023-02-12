@@ -11,7 +11,7 @@ RUN \
     apk add --no-cache \
         build-base \
         libgudev-dev \
-        # bluez-utils \
+        bluez \
         bluez-libs \
         npm
 
