@@ -4,6 +4,7 @@ version: "1.0.18"
 slug: "keyble-mqtt"
 init: false
 host_network: true
+host_dbus: true
 privileged:
   - NET_ADMIN
   - SYS_ADMIN
