@@ -7,7 +7,6 @@ ENV LANG C.UTF-8
 
 RUN \ 
     apk add --no-cache \
-        openrc \
         build-base \
         libgudev-dev \
         bluez \
@@ -22,8 +21,12 @@ COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
+COPY package.json /
+COPY tsconfig.json /
+COPY src/* src/
 COPY run.sh /
+
 RUN npm install --update --global --unsafe-perm keyble
-# RUN npm install --update --global --unsafe-perm keyble-mqtt
+RUN npm install
 RUN chmod a+x /run.sh
 CMD [ "/run.sh" ]

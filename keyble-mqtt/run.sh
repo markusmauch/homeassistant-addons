@@ -18,5 +18,9 @@ echo HOST: $HOST
 echo USERNAME: $USERNAME
 echo PASSWORD: $PASSWORD
 
+
+./node_modules/typescript/bin/tsc
+node ./out/Index.js
+
 #keyble-mqtt $ADDRESS $USER_ID $USER_KEY --host $HOST --username $USERNAME --password $PASSWORD
 tail -f /dev/null
