@@ -1,3 +1,7 @@
+keyble-mqtt/node_modules/*
+keyble-mqtt/out/*
+keyble-mqtt/package-lock.json
+
 powerbox-mqtt/node_modules/*
 powerbox-mqtt/out/*
 powerbox-mqtt/package-lock.json
