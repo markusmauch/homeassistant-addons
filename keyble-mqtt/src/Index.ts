@@ -33,10 +33,12 @@ console.log( CYAN, `Connected to MQTT host '${HOST}'` );
 
 mqttClient.on( "connect", async () =>
 {
-    console.log( CYAN, `Announcing Entity 'command'` );
+    console.log( CYAN, `Announcing Keyble Smart Lock` );
     await mqttClient.publish( `${TOPIC}/config`, JSON.stringify( {
         "name": "keyble",
-        "command_topic": `${TOPIC}/command`
+        "command_topic": `${TOPIC}/command`,
+        "state_topic": `${TOPIC}/state`,
+        "optimistic": true
     } ) );
 } );
 
@@ -73,6 +75,14 @@ schedule.scheduleJob( "0/60 * * * * *", async () =>
 {
     const state = await status( ADDRESS, USER_ID, USER_KEY );
     console.log( CYAN, `Current Lock State: ${state}` );
+    if ( state.indexOf( "LOCKED" ) !== -1 )
+    {
+        console.log( CYAN, `Update State: LOCKED` );
+    }
+    else if ( state.indexOf( "UNLOCKED" ) !== -1 )
+    {
+        console.log( CYAN, `Update State: UNLOCKED` );
+    }
 } );
 
 process.stdin.resume(); //so the program will not close instantly
