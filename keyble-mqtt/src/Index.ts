@@ -1,5 +1,6 @@
 import commandLineArgs, { OptionDefinition } from "command-line-args";
 import Mqtt from "mqtt";
+import { lock, unlock } from "./Lock";
 
 const CYAN = '\x1b[36m%s\x1b[0m';
 
@@ -7,13 +8,19 @@ const optionDefinitions: OptionDefinition[] = [
     { name: "host", type: String, defaultValue: "homeassistant.local" },
     { name: "username", type: String, defaultValue: "" },
     { name: "password", type: String, defaultValue: "" },
+    { name: "address", type: String, defaultValue: "" },
+    { name: "user_id", type: Number, defaultValue: 0 },
+    { name: "user_key", type: String, defaultValue: "" },
 ];
 
 const options = commandLineArgs(optionDefinitions);
 
 const HOST = "192.168.0.4";
 const USERNAME = "homeassistant";
-const PASSWORD = options.password;
+const PASSWORD = options.password as string;
+const ADDRESS = options.address as string;
+const USER_ID = options.user_id as number;
+const USER_KEY = options.user_key as string;
 const TOPIC = "homeassistant/lock/keyble";
 
 const subscriptions = [
@@ -48,8 +55,16 @@ mqttClient.on( "message", ( topic, message, info ) =>
 {
     if ( topic === `${TOPIC}/command` )
     {
-        const value = parseInt( message.toString() );
-        console.log( CYAN, value );
+        const command = message.toString();
+        console.log( CYAN, `Received command ${command}` );
+        if ( command === "LOCK" )
+        {
+            lock( ADDRESS, USER_ID, USER_KEY );
+        }
+        else if ( command === "UNLOCK" )
+        {
+            unlock( ADDRESS, USER_ID, USER_KEY );
+        }
     }
 } );
 

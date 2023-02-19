@@ -20,7 +20,7 @@ echo PASSWORD: $PASSWORD
 
 
 ./node_modules/typescript/bin/tsc
-node ./out/Index.js --host $HOST --username $USERNAME --password $PASSWORD
+node ./out/Index.js --host $HOST --username $USERNAME --password $PASSWORD --address $ADDRESS --user_id $USER_ID --user_key $USER_KEY
 
 #keyble-mqtt $ADDRESS $USER_ID $USER_KEY --host $HOST --username $USERNAME --password $PASSWORD
 tail -f /dev/null
