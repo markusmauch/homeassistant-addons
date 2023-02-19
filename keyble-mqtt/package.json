@@ -2,7 +2,8 @@
   "dependencies": {
     "command-line-args": "^5.2.1",
     "mqtt": "^4.3.7",
-    "node-schedule": "^2.1.1"
+    "node-schedule": "^2.1.1",
+    "queue-promise": "^2.2.1"
   },
   "version": "1.0.0",
   "main": "index.js",

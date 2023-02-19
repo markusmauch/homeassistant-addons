@@ -1,6 +1,7 @@
 import commandLineArgs, { OptionDefinition } from "command-line-args";
 import Mqtt from "mqtt";
 import schedule from "node-schedule";
+import Queue from "queue-promise";
 import { lock, unlock, status } from "./Lock";
 
 const CYAN = '\x1b[36m%s\x1b[0m';
@@ -28,6 +29,12 @@ const subscriptions = [
     `${TOPIC}/command`,
 ];
 
+const queue = new Queue( {
+    concurrent: 1,
+    interval: 5000,
+    start: true,
+} );
+
 const mqttClient = Mqtt.connect( `mqtt://${HOST}`, { username: USERNAME, password: PASSWORD } );
 console.log( CYAN, `Connected to MQTT host '${HOST}'` );
 
@@ -38,7 +45,7 @@ mqttClient.on( "connect", async () =>
         "name": "keyble",
         "command_topic": `${TOPIC}/command`,
         "state_topic": `${TOPIC}/state`,
-        "optimistic": true
+        "optimistic": false
     } ) );
 } );
 
@@ -62,20 +69,36 @@ mqttClient.on( "message", ( topic, message, info ) =>
         console.log( CYAN, `Received command ${command}` );
         if ( command === "LOCK" )
         {
-            lock( ADDRESS, USER_ID, USER_KEY );
+            queue.enqueue( async () =>
+            {
+                const state = await lock( ADDRESS, USER_ID, USER_KEY );
+                updateState( state );
+            } );
         }
         else if ( command === "UNLOCK" )
         {
-            unlock( ADDRESS, USER_ID, USER_KEY );
+            queue.enqueue( async () =>
+            {
+                const state = await unlock( ADDRESS, USER_ID, USER_KEY );
+                updateState( state );
+            } );
         }
     }
 } );
 
-schedule.scheduleJob( "0/60 * * * * *", async () =>
+schedule.scheduleJob( "0/60 * * * * *", () =>
 {
-    console.log( CYAN, `Retrieving lock state...` );
-    const state = await status( ADDRESS, USER_ID, USER_KEY );
-    if ( state.indexOf( "UNLOCKED" ) !== -1 )
+    queue.enqueue( async () =>
+    {
+        console.log( CYAN, `Retrieving lock state...` );
+        const state = await status( ADDRESS, USER_ID, USER_KEY );
+        updateState( state );
+    } );
+} );
+
+function updateState( state: string )
+{
+    if ( state.indexOf( "OPENED" ) !== -1 || state.indexOf( "UNLOCKED" ) !== -1 )
     {
         console.log( CYAN, `Publishing retrieved state: UNLOCKED` );
         mqttClient.publish(`${TOPIC}/state`, "UNLOCKED" );
@@ -89,7 +112,7 @@ schedule.scheduleJob( "0/60 * * * * *", async () =>
     {
         console.log( CYAN, `Lock state unknown` );
     }
-} );
+}
 
 process.stdin.resume(); //so the program will not close instantly
 
@@ -98,6 +121,7 @@ function exitHandler( options: any, exitCode: any )
     if (options.cleanup)
     {
         mqttClient.unsubscribe( subscriptions );
+        queue.stop();
         mqttClient.end();
     }
     if (exitCode || exitCode === 0)
