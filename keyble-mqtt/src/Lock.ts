@@ -23,7 +23,7 @@ export async function unlock( address: string, userId: number, userKey: string )
 async function keybleSendCommand( command: Command, address: string, userId: number, userKey: string )
 {
     // await execShellCommand( "keyble-sendcommand --address 00:1a:22:18:a5:c0 --user_id 1 --user_key 2df1d010a3911023304dd34fe4077e8b --command status" );
-    await execShellCommand( `keyble-sendcommand --address ${address} --user_id ${userId} --user_key ${userKey} --command ${command}` );
+    return await execShellCommand( `keyble-sendcommand --address ${address} --user_id ${userId} --user_key ${userKey} --command ${command}` );
 }
 
 async function resetBluetooth()
