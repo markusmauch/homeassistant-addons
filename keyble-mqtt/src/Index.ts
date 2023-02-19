@@ -14,25 +14,42 @@ const options = commandLineArgs(optionDefinitions);
 const HOST = "192.168.0.4";
 const USERNAME = "homeassistant";
 const PASSWORD = options.password;
-const TOPIC = "keyble";
+const TOPIC = "homeassistant/lock/keyble";
+
+const subscriptions = [
+    `${TOPIC}/command`,
+];
 
 const mqttClient = Mqtt.connect( `mqtt://${HOST}`, { username: USERNAME, password: PASSWORD } );
 console.log( CYAN, `Connected to MQTT host '${HOST}'` );
 
 mqttClient.on( "connect", async () =>
 {
-    console.log( CYAN, `Announcing Entity ''` );
-    await mqttClient.publish( `homeassistant/lock/${TOPIC}/config`, JSON.stringify( {
+    console.log( CYAN, `Announcing Entity 'command'` );
+    await mqttClient.publish( `${TOPIC}/config`, JSON.stringify( {
         "name": "keyble",
-        "command_topic": `homeassistant/lock/${TOPIC}/command`
+        "command_topic": `${TOPIC}/command`
     } ) );
 } );
 
-mqttClient.on( "message", ( topic, message, info ) => {
-    if ( topic === `homeassistant/lock/${TOPIC}/command` )
+mqttClient.subscribe( subscriptions, {qos: 0}, ( err, res ) =>
+{
+    if ( err )
+    {
+        console.error( err) ;
+    }
+    else
+    {
+        subscriptions.forEach( topic => console.log( CYAN, `Subscribed to topic "${topic}"` ) );
+    }
+} );
+
+mqttClient.on( "message", ( topic, message, info ) =>
+{
+    if ( topic === `${TOPIC}/command` )
     {
         const value = parseInt( message.toString() );
-        console.log( value );
+        console.log( CYAN, value );
     }
 } );
 
@@ -43,7 +60,7 @@ function exitHandler( options: any, exitCode: any )
 {
     if (options.cleanup)
     {
-        // mqttClient.unsubscribe(subscriptions);
+        mqttClient.unsubscribe( subscriptions );
         mqttClient.end();
     }
     if (exitCode || exitCode === 0)
