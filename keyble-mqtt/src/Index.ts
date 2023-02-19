@@ -73,15 +73,21 @@ mqttClient.on( "message", ( topic, message, info ) =>
 
 schedule.scheduleJob( "0/60 * * * * *", async () =>
 {
+    console.log( CYAN, `Retrieving lock state` );
     const state = await status( ADDRESS, USER_ID, USER_KEY );
-    console.log( CYAN, `Current Lock State: ${state}` );
     if ( state.indexOf( "LOCKED" ) !== -1 )
     {
-        console.log( CYAN, `Update State: LOCKED` );
+        console.log( CYAN, `Publishing state: LOCKED` );
+        mqttClient.publish(`${TOPIC}/state`, "LOCKED" );
     }
     else if ( state.indexOf( "UNLOCKED" ) !== -1 )
     {
-        console.log( CYAN, `Update State: UNLOCKED` );
+        console.log( CYAN, `Publishing state: UNLOCKED` );
+        mqttClient.publish(`${TOPIC}/state`, "UNLOCKED" );
+    }
+    else
+    {
+        console.log( CYAN, `Lock state unknown` );
     }
 } );
 
