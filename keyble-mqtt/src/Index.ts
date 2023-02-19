@@ -24,7 +24,6 @@ mqttClient.on( "connect", async () =>
     console.log( CYAN, `Announcing Entity ''` );
     await mqttClient.publish( `homeassistant/lock/${TOPIC}/config`, JSON.stringify( {
         "name": "keyble",
-        "device_class": "lock",
         "command_topic": `homeassistant/lock/${TOPIC}/command`
     } ) );
 } );
