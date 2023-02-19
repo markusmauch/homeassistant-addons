@@ -2,17 +2,22 @@ import { execShellCommand } from "./ShellHelpers";
 
 export type Command = "lock" | "open" | "status";
 
+export async function status( address: string, userId: number, userKey: string )
+{
+    await resetBluetooth();
+    await keybleSendCommand( "status", address, userId, userKey );
+}
+
 export async function lock( address: string, userId: number, userKey: string )
 {
     await resetBluetooth();
     await keybleSendCommand( "lock", address, userId, userKey );
-    
 }
 
 export async function unlock( address: string, userId: number, userKey: string )
 {
     await resetBluetooth();
-    await keybleSendCommand( "lock", address, userId, userKey );
+    await keybleSendCommand( "open", address, userId, userKey );
 }
 
 async function keybleSendCommand( command: Command, address: string, userId: number, userKey: string )

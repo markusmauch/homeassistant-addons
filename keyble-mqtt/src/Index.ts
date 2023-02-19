@@ -1,6 +1,7 @@
 import commandLineArgs, { OptionDefinition } from "command-line-args";
 import Mqtt from "mqtt";
-import { lock, unlock } from "./Lock";
+import schedule from "node-schedule";
+import { lock, unlock, status } from "./Lock";
 
 const CYAN = '\x1b[36m%s\x1b[0m';
 
@@ -68,6 +69,11 @@ mqttClient.on( "message", ( topic, message, info ) =>
     }
 } );
 
+schedule.scheduleJob( "0/60 * * * * *", async () =>
+{
+    const state = await status( ADDRESS, USER_ID, USER_KEY );
+    console.log( CYAN, `Current Lock State: ${state}` );
+} );
 
 process.stdin.resume(); //so the program will not close instantly
 
