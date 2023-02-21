@@ -11,11 +11,12 @@ RUN \
         npm
 
 COPY --from=mqttx /app ./app
+RUN npm i -g http-server
 COPY run.sh /
 RUN chmod a+x /run.sh
 CMD [ "/run.sh" ]
 
-# RUN npm i -g http-server
+
 # EXPOSE 80
 # CMD [ "http-server", "-p", "80" ]
 
