@@ -11,6 +11,7 @@ export function execShellCommand( cmd: string ): Promise<string>
             if ( error )
             {
                 console.warn( error );
+                reject( error );
             }
             resolve( stdout? stdout : stderr );
         } );

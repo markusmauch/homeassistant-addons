@@ -37,12 +37,14 @@ const queue = new Queue( {
     start: true,
 } );
 
+const timestamp = () => ( new Date().toISOString() );
+
 const mqttClient = Mqtt.connect( `mqtt://${HOST}`, { username: USERNAME, password: PASSWORD } );
-console.log( CYAN, `Connected to MQTT host '${HOST}'` );
+console.log( CYAN, `${timestamp()} Connected to MQTT host '${HOST}'` );
 
 mqttClient.on( "connect", async () =>
 {
-    console.log( CYAN, `Announcing Keyble Smart Lock` );
+    console.log( CYAN, `${timestamp()} Announcing Keyble Smart Lock` );
     await mqttClient.publish(
         `${TOPIC}/config`,
         JSON.stringify( {
@@ -67,7 +69,7 @@ mqttClient.subscribe( subscriptions, {qos: 0}, ( err, res ) =>
     }
     else
     {
-        subscriptions.forEach( topic => console.log( CYAN, `Subscribed to topic "${topic}"` ) );
+        subscriptions.forEach( topic => console.log( CYAN, `${timestamp()} Subscribed to topic "${topic}"` ) );
     }
 } );
 
@@ -76,7 +78,7 @@ mqttClient.on( "message", ( topic, message, info ) =>
     if ( topic === `${TOPIC}/command` )
     {
         const command = message.toString();
-        console.log( CYAN, `Received command ${command}` );
+        console.log( CYAN, `${timestamp()} Received command ${command}` );
         if ( command === "LOCK" )
         {
             queue.enqueue( async () =>
@@ -100,7 +102,7 @@ schedule.scheduleJob( "0/60 * * * * *", () =>
 {
     queue.enqueue( async () =>
     {
-        console.log( CYAN, `Retrieving lock state...` );
+        console.log( CYAN, `${timestamp()} Retrieving lock state...` );
         const state = await status( ADDRESS, USER_ID, USER_KEY );
         updateState( state );
     } );
@@ -110,17 +112,17 @@ function updateState( state: string )
 {
     if ( state.indexOf( "OPENED" ) !== -1 || state.indexOf( "UNLOCKED" ) !== -1 )
     {
-        console.log( CYAN, `Publishing retrieved state: UNLOCKED` );
+        console.log( CYAN, `${timestamp()} Publishing retrieved state: UNLOCKED` );
         mqttClient.publish(`${TOPIC}/state`, "UNLOCKED" );
     }
     else if ( state.indexOf( "LOCKED" ) !== -1 )
     {
-        console.log( CYAN, `Publishing retrieved state: LOCKED` );
+        console.log( CYAN, `${timestamp()} Publishing retrieved state: LOCKED` );
         mqttClient.publish(`${TOPIC}/state`, "LOCKED" );
     }
     else
     {
-        console.log( CYAN, `Lock state unknown` );
+        console.log( CYAN, `${timestamp()} Lock state unknown` );
     }
 }
 
