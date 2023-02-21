@@ -5,7 +5,7 @@ slug: "mqttx"
 init: false
 host_network: true
 ports:
-  80/TCP: 6789
+  80/tcp: 6789
 webui: http://[HOST]:[PORT:6789]/index.html
 privileged:
   - NET_ADMIN
