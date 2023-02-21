@@ -2,7 +2,7 @@ import commandLineArgs, { OptionDefinition } from "command-line-args";
 import Mqtt from "mqtt";
 import schedule from "node-schedule";
 import Queue from "queue-promise";
-import { lock, unlock, status } from "./Lock";
+import { lock, status, unlock } from "./Lock";
 
 const CYAN = '\x1b[36m%s\x1b[0m';
 
@@ -23,7 +23,9 @@ const PASSWORD = options.password as string;
 const ADDRESS = options.address as string;
 const USER_ID = options.user_id as number;
 const USER_KEY = options.user_key as string;
-const TOPIC = "homeassistant/lock/keyble";
+
+const uniqueId = `keyble_${ ADDRESS.replace( /:/g, "" ).toLowerCase() }`;
+const TOPIC = `homeassistant/lock/${uniqueId}`;
 
 const subscriptions = [
     `${TOPIC}/command`,
@@ -43,6 +45,7 @@ mqttClient.on( "connect", async () =>
     console.log( CYAN, `Announcing Keyble Smart Lock` );
     await mqttClient.publish( `${TOPIC}/config`, JSON.stringify( {
         "name": "keyble",
+        "unique_id": uniqueId,
         "command_topic": `${TOPIC}/command`,
         "state_topic": `${TOPIC}/state`,
         "optimistic": false
