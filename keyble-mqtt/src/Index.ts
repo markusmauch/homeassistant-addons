@@ -43,13 +43,20 @@ console.log( CYAN, `Connected to MQTT host '${HOST}'` );
 mqttClient.on( "connect", async () =>
 {
     console.log( CYAN, `Announcing Keyble Smart Lock` );
-    await mqttClient.publish( `${TOPIC}/config`, JSON.stringify( {
-        "name": "Eqiva Bluetooth Smart (keyble)",
-        "unique_id": uniqueId,
-        "command_topic": `${TOPIC}/command`,
-        "state_topic": `${TOPIC}/state`,
-        "optimistic": false
-    } ) );
+    await mqttClient.publish(
+        `${TOPIC}/config`,
+        JSON.stringify( {
+            "name": "Eqiva Bluetooth Smart (keyble)",
+            "unique_id": uniqueId,
+            "command_topic": `${TOPIC}/command`,
+            "state_topic": `${TOPIC}/state`,
+            "optimistic": false
+        } ),
+        {
+            retain: true,
+            qos: 1
+        }
+    );
 } );
 
 mqttClient.subscribe( subscriptions, {qos: 0}, ( err, res ) =>
