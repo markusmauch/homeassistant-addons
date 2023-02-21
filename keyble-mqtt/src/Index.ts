@@ -44,7 +44,7 @@ mqttClient.on( "connect", async () =>
 {
     console.log( CYAN, `Announcing Keyble Smart Lock` );
     await mqttClient.publish( `${TOPIC}/config`, JSON.stringify( {
-        "name": "keyble",
+        "name": "Eqiva Bluetooth Smart (keyble)",
         "unique_id": uniqueId,
         "command_topic": `${TOPIC}/command`,
         "state_topic": `${TOPIC}/state`,
