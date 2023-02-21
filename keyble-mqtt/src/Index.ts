@@ -37,7 +37,7 @@ const queue = new Queue( {
     start: true,
 } );
 
-const timestamp = () => ( new Date().toISOString() );
+const timestamp = () => ( new Date().toISOString().substr(0,19) ) + ":";
 
 const mqttClient = Mqtt.connect( `mqtt://${HOST}`, { username: USERNAME, password: PASSWORD } );
 console.log( CYAN, `${timestamp()} Connected to MQTT host '${HOST}'` );
