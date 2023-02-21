@@ -1,0 +1,21 @@
+name: "mqttx"
+description: "MQTT Web Client"
+version: "1.0.0"
+slug: "mqttx"
+init: false
+host_network: true
+ports:
+  80/TCP: 6789
+webui: http://[HOST]:[PORT:6789]/index.html
+privileged:
+  - NET_ADMIN
+arch:
+  - armv7
+options:
+  host: "192.168.0.1"
+  username: ""
+  password: ""
+schema:
+  host: str
+  username: str
+  password: str
