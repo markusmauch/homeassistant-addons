@@ -6,6 +6,8 @@ init: false
 host_network: true
 ports:
   80/tcp: 6789
+ports_description:
+  80/tcp: Web interface
 webui: http://[HOST]:[PORT:6789]/index.html
 privileged:
   - NET_ADMIN
