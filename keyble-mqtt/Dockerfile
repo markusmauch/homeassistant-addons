@@ -23,7 +23,7 @@ COPY --from=node /usr/local/bin /usr/local/bin
 
 RUN npm install --update --global --unsafe-perm keyble
 
-COPY lib/keyble/keyble.js /usr/local/lib/node_modules/keyble
+COPY patch/keyble.js /usr/local/lib/node_modules/keyble
 
 COPY package.json /
 COPY tsconfig.json /
