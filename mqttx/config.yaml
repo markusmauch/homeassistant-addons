@@ -1,13 +1,13 @@
 name: "mqttx"
 description: "MQTT Web Client"
-version: "1.0.4"
+version: "1.0.5"
 slug: "mqttx"
 init: false
 host_network: true
 ports:
-  80/tcp: 6789
+  6789/tcp: 6789
 ports_description:
-  80/tcp: Web interface
+  6789/tcp: Web interface
 arch:
   - armv7
 options:

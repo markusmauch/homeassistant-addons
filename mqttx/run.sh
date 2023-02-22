@@ -8,9 +8,8 @@ HOST="$(jq --raw-output '.host' $CONFIG_PATH)"
 USERNAME="$(jq --raw-output '.username' $CONFIG_PATH)"
 PASSWORD="$(jq --raw-output '.password' $CONFIG_PATH)"
 
-# cd ./app
-# http-server -p 80
+http-server -p 6789 /app
 
 # node ./out/Index.js --host $HOST --username $USERNAME --password $PASSWORD --address $ADDRESS --user_id $USER_ID --user_key $USER_KEY
 # keyble-mqtt $ADDRESS $USER_ID $USER_KEY --host $HOST --username $USERNAME --password $PASSWORD
-tail -f /dev/null
+# tail -f /dev/null
