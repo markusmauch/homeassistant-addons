@@ -25,10 +25,10 @@ const USER_ID = options.user_id as number;
 const USER_KEY = options.user_key as string;
 
 const uniqueId = `keyble_${ ADDRESS.replace( /:/g, "" ).toLowerCase() }`;
-const TOPIC = `homeassistant/lock/${uniqueId}`;
+const TOPIC = ( deviceClass: "lock" | "binary_sensor" = "lock" ) => `homeassistant/${deviceClass}/${uniqueId}`;
 
 const subscriptions = [
-    `${TOPIC}/command`,
+    `${TOPIC("lock")}/command`,
 ];
 
 const queue = new Queue( {
@@ -46,13 +46,27 @@ mqttClient.on( "connect", async () =>
 {
     console.log( CYAN, `${timestamp()} Announcing Keyble Smart Lock` );
     await mqttClient.publish(
-        `${TOPIC}/config`,
+        `${TOPIC("lock")}/config`,
         JSON.stringify( {
             "name": "Eqiva Bluetooth Smart (keyble)",
             "unique_id": uniqueId,
-            "command_topic": `${TOPIC}/command`,
-            "state_topic": `${TOPIC}/state`,
+            "command_topic": `${TOPIC("lock")}/command`,
+            "state_topic": `${TOPIC("lock")}/state`,
             "optimistic": false
+        } ),
+        {
+            retain: true,
+            qos: 1
+        }
+    );
+
+    console.log( CYAN, `${timestamp()} Announcing Keyble Smart Lock Battery Low` );
+    await mqttClient.publish(
+        `${TOPIC("binary_sensor")}/config`,
+        JSON.stringify( {
+            "name": "Eqiva Bluetooth Smart Battery Low (keyble)",
+            "unique_id": `${uniqueId}_battery_low`,
+            "state_topic": `${TOPIC("binary_sensor")}/battery_low`,
         } ),
         {
             retain: true,
@@ -75,7 +89,7 @@ mqttClient.subscribe( subscriptions, {qos: 0}, ( err, res ) =>
 
 mqttClient.on( "message", ( topic, message, info ) =>
 {
-    if ( topic === `${TOPIC}/command` )
+    if ( topic === `${TOPIC("lock")}/command` )
     {
         const command = message.toString();
         console.log( CYAN, `${timestamp()} Received command ${command}` );
@@ -110,20 +124,24 @@ schedule.scheduleJob( "0/60 * * * * *", () =>
 
 function updateState( state: string )
 {
+    // lock state
     if ( state.indexOf( "OPENED" ) !== -1 || state.indexOf( "UNLOCKED" ) !== -1 )
     {
         console.log( CYAN, `${timestamp()} Publishing retrieved state: UNLOCKED` );
-        mqttClient.publish(`${TOPIC}/state`, "UNLOCKED" );
+        mqttClient.publish(`${TOPIC("lock")}/state`, "UNLOCKED" );
     }
     else if ( state.indexOf( "LOCKED" ) !== -1 )
     {
         console.log( CYAN, `${timestamp()} Publishing retrieved state: LOCKED` );
-        mqttClient.publish(`${TOPIC}/state`, "LOCKED" );
+        mqttClient.publish(`${TOPIC("lock")}/state`, "LOCKED" );
     }
     else
     {
         console.log( CYAN, `${timestamp()} Lock state unknown` );
     }
+
+    // battery state
+    mqttClient.publish(`${TOPIC("lock")}/battery_low`, state.indexOf( "BATTERY_LOW" ) !== -1 ? "on": "off" );
 }
 
 process.stdin.resume(); //so the program will not close instantly
