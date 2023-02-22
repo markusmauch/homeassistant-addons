@@ -1,6 +1,6 @@
 name: "mqttx"
 description: "MQTT Web Client"
-version: "1.0.2"
+version: "1.0.3"
 slug: "mqttx"
 init: false
 host_network: true
