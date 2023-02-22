@@ -1,6 +1,6 @@
 name: "mqttx"
 description: "MQTT Web Client"
-version: "1.0.6"
+version: "1.0.7"
 ingress: true
 ingress_port: 6789
 slug: "mqttx"
@@ -10,6 +10,7 @@ ports:
   6789/tcp: 6789
 ports_description:
   6789/tcp: Web interface
+# webui: http://[HOST]:[PORT:6789]/index.html
 arch:
   - armv7
 options:

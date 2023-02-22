@@ -7,11 +7,16 @@ ENV LANG C.UTF-8
 
 RUN \ 
     apk add --no-cache \
-        nodejs \
-        npm
+        # nodejs \
+        # npm \
+        nginx \
+    \
+    && mkdir -p /run/nginx
 
 COPY --from=mqttx /app ./app
-RUN npm i -g http-server
+COPY ingress.conf /etc/nginx/http.d/
+
+# RUN npm i -g http-server
 COPY run.sh /
 RUN chmod a+x /run.sh
 CMD [ "/run.sh" ]
