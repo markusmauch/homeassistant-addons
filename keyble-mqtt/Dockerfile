@@ -21,12 +21,15 @@ COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
+RUN npm install --update --global --unsafe-perm keyble
+
+COPY patch/keyble.js /usr/local/lib/node_modules/keyble
+
 COPY package.json /
 COPY tsconfig.json /
 COPY src/* src/
 COPY run.sh /
 
-RUN npm install --update --global --unsafe-perm keyble
 RUN npm install
 RUN chmod a+x /run.sh
 CMD [ "/run.sh" ]
