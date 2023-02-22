@@ -21,7 +21,7 @@ COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
-RUN npm install --update --global --unsafe-perm keyble
+RUN npm install --update --global --unsafe-perm keyble@0.3.2
 
 COPY patch/keyble.js /usr/local/lib/node_modules/keyble
 
