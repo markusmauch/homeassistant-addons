@@ -1,6 +1,8 @@
 name: "mqttx"
 description: "MQTT Web Client"
-version: "1.0.5"
+version: "1.0.6"
+ingress: true
+ingress_port: 6789
 slug: "mqttx"
 init: false
 host_network: true
