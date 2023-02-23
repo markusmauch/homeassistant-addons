@@ -13,6 +13,8 @@ const optionDefinitions: OptionDefinition[] = [
     { name: "address", type: String, defaultValue: "" },
     { name: "user_id", type: Number, defaultValue: 0 },
     { name: "user_key", type: String, defaultValue: "" },
+    { name: "auto_disconnect_time", type: Number, defaultValue: 10 },
+    { name: "poll_interval", type: Number, defaultValue: 5 },
 ];
 
 const options = commandLineArgs(optionDefinitions);
@@ -23,6 +25,7 @@ const PASSWORD = options.password as string;
 const ADDRESS = options.address as string;
 const USER_ID = options.user_id as number;
 const USER_KEY = options.user_key as string;
+const AUTO_DISCONNECT_TIME = options.auto_disconnect_time as number;
 
 const uniqueId = ADDRESS.replace( /:/g, "" ).toLowerCase();
 const ENTITY_CONFIG_TOPIC = ( component: "lock" | "binary_sensor" ) => `homeassistant/${component}/keyble/${uniqueId}/config`;
@@ -34,6 +37,8 @@ const queue = new Queue( {
     interval: 5000,
     start: true,
 } );
+
+let job: schedule.Job;
 
 const timestamp = ( new Date().toISOString().substr(0,19) );
 const log = ( msg: string ) => console.log( CYAN, `${timestamp}: ${msg}` );
@@ -85,6 +90,9 @@ mqttClient.on( "connect", async () =>
             qos: 1
         }
     );
+
+    publishCurrentState();
+    job = schedule.scheduleJob( `* */{poll_interval} * * * *`, () => queue.enqueue( async () => publishCurrentState() ) );
 } );
 
 mqttClient.subscribe( subscription, {qos: 0}, ( err, res ) =>
@@ -109,37 +117,28 @@ mqttClient.on( "message", ( topic, message, info ) =>
         {
             queue.enqueue( async () =>
             {
-                await lock( ADDRESS, USER_ID, USER_KEY );
-                // publishState( state );
+                await lock( ADDRESS, USER_ID, USER_KEY, AUTO_DISCONNECT_TIME );
             } );
         }
         else if ( command === "UNLOCK" )
         {
             queue.enqueue( async () =>
             {
-                await unlock( ADDRESS, USER_ID, USER_KEY );
-                // publishState( state );
+                await unlock( ADDRESS, USER_ID, USER_KEY, AUTO_DISCONNECT_TIME );
             } );
         }
     }
 } );
 
-schedule.scheduleJob( "* 5 * * * *", () =>
-{
-    queue.enqueue( async () =>
-    {
-        log( `Retrieving lock state...` );
-        const state = await status( ADDRESS, USER_ID, USER_KEY );
-        publishState( state );
-    } );
-} );
-
-function publishState( state: string )
+async function publishCurrentState()
 {
     type State = {
         locked: boolean;
         batteryLow: boolean;
     };
+
+    log( `Retrieving lock state...` );
+    const state = await status( ADDRESS, USER_ID, USER_KEY );
 
     const json = {
         batteryLow: state.indexOf("BATTERY_LOW") !== -1
@@ -171,6 +170,7 @@ function exitHandler( options: any, exitCode: any )
     if (options.cleanup)
     {
         mqttClient.unsubscribe( subscription );
+        job.cancel();
         queue.stop();
         mqttClient.end();
     }

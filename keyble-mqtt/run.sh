@@ -10,15 +10,8 @@ USER_KEY="$(jq --raw-output '.user_key' $CONFIG_PATH)"
 HOST="$(jq --raw-output '.host' $CONFIG_PATH)"
 USERNAME="$(jq --raw-output '.username' $CONFIG_PATH)"
 PASSWORD="$(jq --raw-output '.password' $CONFIG_PATH)"
-
-# echo ADDRESS: $ADDRESS
-# echo USER_ID: $USER_ID
-# echo USER_KEY: $USER_KEY
-# echo HOST: $HOST
-# echo USERNAME: $USERNAME
-# echo PASSWORD: $PASSWORD
+AUTO_DISCONNECT_TIME="$(jq --raw-output '.auto_disconnect_time' $CONFIG_PATH)"
+POLL_INTERVAL="$(jq --raw-output '.poll_interval' $CONFIG_PATH)"
 
 ./node_modules/typescript/bin/tsc
-node ./out/Index.js --host $HOST --username $USERNAME --password $PASSWORD --address $ADDRESS --user_id $USER_ID --user_key $USER_KEY
-# keyble-mqtt $ADDRESS $USER_ID $USER_KEY --host $HOST --username $USERNAME --password $PASSWORD
-# tail -f /dev/null
+node ./out/Index.js --host $HOST --username $USERNAME --password $PASSWORD --address $ADDRESS --user_id $USER_ID --user_key $USER_KEY --auto_disconnect_time $AUTO_DISCONNECT_TIME --poll_interval $POLL_INTERVAL
