@@ -799,10 +799,25 @@ Key_Ble = class extends Event_Emitter {
           3: 'LOCKED',
           4: 'OPENED'
         }[lock_status_id];
-        if ( message.data.battery_low )
-        {
-            lock_status_string = lock_status_string + " BATTERY_LOW";
-        }
+        /**
+         * data: {
+         *   a: true, // administrator mit true/false
+         *   user_right_type: 3,
+         *   e: false, // battery_low true/false
+         *   f: false,
+         *   g: false,
+         *   h: false,
+         *   i: false,
+         *   j: true,
+         *   lock_status: 3,
+         *   l: 16,
+         *   m: 23
+         * }
+         * g=true und h,i=false - normalbetrieb,
+         * g,h=true und i=false - automatisch schliessen,
+         * g,i=true und h=false - dauerhaft schliessen.
+         */
+        lock_status_string = lock_status_string + " " + ( message.data.e == true ? "BATTERY_LOW" : "BATTERY_OK" );
         this.emit('status_update', lock_status_id, lock_status_string);
         if (this.lock_status_id !== lock_status_id) {
           this.lock_status_id = lock_status_id;

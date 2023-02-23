@@ -127,12 +127,12 @@ function updateState( state: string )
     // lock state
     if ( state.indexOf( "OPENED" ) !== -1 || state.indexOf( "UNLOCKED" ) !== -1 )
     {
-        console.log( CYAN, `${timestamp()} Publishing retrieved state: UNLOCKED` );
+        console.log( CYAN, `${timestamp()} Publishing Lock state: UNLOCKED` );
         mqttClient.publish(`${TOPIC("lock")}/state`, "UNLOCKED" );
     }
     else if ( state.indexOf( "LOCKED" ) !== -1 )
     {
-        console.log( CYAN, `${timestamp()} Publishing retrieved state: LOCKED` );
+        console.log( CYAN, `${timestamp()} Publishing Lock state: LOCKED` );
         mqttClient.publish(`${TOPIC("lock")}/state`, "LOCKED" );
     }
     else
@@ -141,7 +141,9 @@ function updateState( state: string )
     }
 
     // battery state
-    mqttClient.publish(`${TOPIC("lock")}/battery_low`, state.indexOf( "BATTERY_LOW" ) !== -1 ? "on": "off" );
+    const batteryLow = state.indexOf("BATTERY_LOW") !== -1;
+    console.log( CYAN, `${timestamp()} Publishing Battery Low state: ${String(batteryLow).toUpperCase()}` );
+    mqttClient.publish(`${TOPIC("lock")}/battery_low`, batteryLow ? "on": "off" );
 }
 
 process.stdin.resume(); //so the program will not close instantly
