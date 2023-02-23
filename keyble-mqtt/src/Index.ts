@@ -41,8 +41,8 @@ const queue = new Queue( {
 
 let job: schedule.Job;
 
-const timestamp = ( new Date().toISOString().substr(0,19) );
-const log = ( msg: string ) => console.log( CYAN, `${timestamp}: ${msg}` );
+const timestamp = () => ( new Date().toISOString().substr(0,19) );
+const log = ( msg: string ) => console.log( CYAN, `${timestamp()}: ${msg}` );
 
 const mqttClient = Mqtt.connect( `mqtt://${HOST}`, { username: USERNAME, password: PASSWORD } );
 
@@ -95,7 +95,7 @@ mqttClient.on( "connect", async () =>
     );
 
     publishCurrentState();
-    job = schedule.scheduleJob( `* */${POLL_INTERVAL} * * * *`, () => queue.enqueue( async () => publishCurrentState() ) );
+    job = schedule.scheduleJob( `*/${POLL_INTERVAL} * * * * *`, () => queue.enqueue( async () => publishCurrentState() ) );
 
     mqttClient.subscribe( subscription, {qos: 0}, ( err, res ) =>
     {
