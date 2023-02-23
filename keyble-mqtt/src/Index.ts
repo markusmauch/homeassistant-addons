@@ -7,14 +7,14 @@ import { lock, status, unlock } from "./Lock";
 const CYAN = '\x1b[36m%s\x1b[0m';
 
 const optionDefinitions: OptionDefinition[] = [
-    { name: "host", type: String, defaultValue: "homeassistant.local" },
-    { name: "username", type: String, defaultValue: "" },
-    { name: "password", type: String, defaultValue: "" },
-    { name: "address", type: String, defaultValue: "" },
-    { name: "user_id", type: Number, defaultValue: 0 },
-    { name: "user_key", type: String, defaultValue: "" },
-    { name: "auto_disconnect_time", type: Number, defaultValue: 10 },
-    { name: "poll_interval", type: Number, defaultValue: 5 },
+    { name: "host", type: String },
+    { name: "username", type: String },
+    { name: "password", type: String },
+    { name: "address", type: String },
+    { name: "user_id", type: Number },
+    { name: "user_key", type: String },
+    { name: "auto_disconnect_time", type: Number },
+    { name: "poll_interval", type: Number },
 ];
 
 const options = commandLineArgs(optionDefinitions);
@@ -26,6 +26,7 @@ const ADDRESS = options.address as string;
 const USER_ID = options.user_id as number;
 const USER_KEY = options.user_key as string;
 const AUTO_DISCONNECT_TIME = options.auto_disconnect_time as number;
+const POLL_INTERVAL = options.poll_interval as number;
 
 const uniqueId = ADDRESS.replace( /:/g, "" ).toLowerCase();
 const ENTITY_CONFIG_TOPIC = ( component: "lock" | "binary_sensor" ) => `homeassistant/${component}/keyble/${uniqueId}/config`;
@@ -44,6 +45,8 @@ const timestamp = ( new Date().toISOString().substr(0,19) );
 const log = ( msg: string ) => console.log( CYAN, `${timestamp}: ${msg}` );
 
 const mqttClient = Mqtt.connect( `mqtt://${HOST}`, { username: USERNAME, password: PASSWORD } );
+
+mqttClient.on( "error", error => console.error( error.message ) );
 
 mqttClient.on( "connect", async () =>
 {
@@ -92,19 +95,19 @@ mqttClient.on( "connect", async () =>
     );
 
     publishCurrentState();
-    job = schedule.scheduleJob( `* */{poll_interval} * * * *`, () => queue.enqueue( async () => publishCurrentState() ) );
-} );
+    job = schedule.scheduleJob( `* */${POLL_INTERVAL} * * * *`, () => queue.enqueue( async () => publishCurrentState() ) );
 
-mqttClient.subscribe( subscription, {qos: 0}, ( err, res ) =>
-{
-    if ( err )
+    mqttClient.subscribe( subscription, {qos: 0}, ( err, res ) =>
     {
-        console.error( err) ;
-    }
-    else
-    {
-        log( `Subscribed to topic '${subscription}'` );
-    }
+        if ( err )
+        {
+            console.error( err) ;
+        }
+        else
+        {
+            log( `Subscribed to topic '${subscription}'` );
+        }
+    } );
 } );
 
 mqttClient.on( "message", ( topic, message, info ) =>
