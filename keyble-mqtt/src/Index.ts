@@ -25,9 +25,9 @@ const USER_ID = options.user_id as number;
 const USER_KEY = options.user_key as string;
 
 const uniqueId = ADDRESS.replace( /:/g, "" ).toLowerCase();
-
 const ENTITY_CONFIG_TOPIC = ( component: "lock" | "binary_sensor" ) => `homeassistant/${component}/keyble/${uniqueId}/config`;
 const DEVICE_TOPIC = `keyble/${uniqueId}/`;
+const subscription = `${DEVICE_TOPIC}/command`;
 
 const queue = new Queue( {
     concurrent: 1,
@@ -89,7 +89,7 @@ mqttClient.on( "connect", async () =>
     );
 } );
 
-mqttClient.subscribe( `${DEVICE_TOPIC}/command`, {qos: 0}, ( err, res ) =>
+mqttClient.subscribe( subscription, {qos: 0}, ( err, res ) =>
 {
     if ( err )
     {
@@ -97,7 +97,7 @@ mqttClient.subscribe( `${DEVICE_TOPIC}/command`, {qos: 0}, ( err, res ) =>
     }
     else
     {
-        log( `Subscribed to topic '${DEVICE_TOPIC}/command}'` );
+        log( `Subscribed to topic '${subscription}'` );
     }
 } );
 
@@ -176,13 +176,13 @@ function exitHandler( options: any, exitCode: any )
 {
     if (options.cleanup)
     {
-        mqttClient.unsubscribe( subscriptions );
+        mqttClient.unsubscribe( subscription );
         queue.stop();
         mqttClient.end();
     }
     if (exitCode || exitCode === 0)
     {
-        log( CYAN, exitCode );
+        log( exitCode );
     }
     if (options.exit)
     {
