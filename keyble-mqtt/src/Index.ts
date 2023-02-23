@@ -19,8 +19,8 @@ const optionDefinitions: OptionDefinition[] = [
 
 const options = commandLineArgs(optionDefinitions);
 
-const HOST = "192.168.0.4";
-const USERNAME = "homeassistant";
+const HOST = "";
+const USERNAME = "";
 const PASSWORD = options.password as string;
 const ADDRESS = options.address as string;
 const USER_ID = options.user_id as number;
@@ -115,17 +115,11 @@ mqttClient.on( "message", ( topic, message, info ) =>
         log( `Received command ${command}` );
         if ( command === "LOCK" )
         {
-            queue.enqueue( async () =>
-            {
-                await lock( ADDRESS, USER_ID, USER_KEY, AUTO_DISCONNECT_TIME );
-            } );
+            queue.enqueue( async () => await lock( ADDRESS, USER_ID, USER_KEY, AUTO_DISCONNECT_TIME ) );
         }
         else if ( command === "UNLOCK" )
         {
-            queue.enqueue( async () =>
-            {
-                await unlock( ADDRESS, USER_ID, USER_KEY, AUTO_DISCONNECT_TIME );
-            } );
+            queue.enqueue( async () => await unlock( ADDRESS, USER_ID, USER_KEY, AUTO_DISCONNECT_TIME ) );
         }
     }
 } );
@@ -138,7 +132,7 @@ async function publishCurrentState()
     };
 
     log( `Retrieving lock state...` );
-    const state = await status( ADDRESS, USER_ID, USER_KEY );
+    const state = await status( ADDRESS, USER_ID, USER_KEY, AUTO_DISCONNECT_TIME );
 
     const json = {
         batteryLow: state.indexOf("BATTERY_LOW") !== -1
@@ -159,7 +153,7 @@ async function publishCurrentState()
 
     // publish state object
     const jsonStr = JSON.stringify(json);
-    log( `Publishing Lock state: ${jsonStr}` );
+    log( `Publishing lock state: ${jsonStr}` );
     mqttClient.publish(`${DEVICE_TOPIC}/state`, jsonStr );
 }
 
