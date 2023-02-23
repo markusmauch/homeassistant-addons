@@ -26,7 +26,7 @@ const USER_KEY = options.user_key as string;
 
 const uniqueId = ADDRESS.replace( /:/g, "" ).toLowerCase();
 const ENTITY_CONFIG_TOPIC = ( component: "lock" | "binary_sensor" ) => `homeassistant/${component}/keyble/${uniqueId}/config`;
-const DEVICE_TOPIC = `keyble/${uniqueId}/`;
+const DEVICE_TOPIC = `keyble/${uniqueId}`;
 const subscription = `${DEVICE_TOPIC}/command`;
 
 const queue = new Queue( {
@@ -56,11 +56,9 @@ mqttClient.on( "connect", async () =>
             "command_topic": `${DEVICE_TOPIC}/command`,
             "state_topic": `${DEVICE_TOPIC}/state`,
             "value_template": "{{ value_json.locked }}",
-            // "payload_lock": true,
-            // "payload_unlock": false,
             "state_locked": true, 
             "state_unlocked": false,
-            "optimistic": false
+            "optimistic": true
         } ),
         {
             retain: true,
@@ -111,22 +109,22 @@ mqttClient.on( "message", ( topic, message, info ) =>
         {
             queue.enqueue( async () =>
             {
-                const state = await lock( ADDRESS, USER_ID, USER_KEY );
-                publishState( state );
+                await lock( ADDRESS, USER_ID, USER_KEY );
+                // publishState( state );
             } );
         }
         else if ( command === "UNLOCK" )
         {
             queue.enqueue( async () =>
             {
-                const state = await unlock( ADDRESS, USER_ID, USER_KEY );
-                publishState( state );
+                await unlock( ADDRESS, USER_ID, USER_KEY );
+                // publishState( state );
             } );
         }
     }
 } );
 
-schedule.scheduleJob( "0/60 * * * * *", () =>
+schedule.scheduleJob( "* 5 * * * *", () =>
 {
     queue.enqueue( async () =>
     {
@@ -142,10 +140,6 @@ function publishState( state: string )
         locked: boolean;
         batteryLow: boolean;
     };
-    // type State = {
-    //     locked: "LOCKED" | "UNLOCKED";
-    //     battery_low: "on" | "off";
-    // };
 
     const json = {
         batteryLow: state.indexOf("BATTERY_LOW") !== -1
