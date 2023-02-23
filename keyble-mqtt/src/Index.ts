@@ -95,7 +95,7 @@ mqttClient.on( "connect", async () =>
     );
 
     publishCurrentState();
-    job = schedule.scheduleJob( `*/${POLL_INTERVAL} * * * * *`, () => queue.enqueue( async () => publishCurrentState() ) );
+    job = schedule.scheduleJob( `* */10 * * * *`, () => queue.enqueue( async () => publishCurrentState() ) );
 
     mqttClient.subscribe( subscription, {qos: 0}, ( err, res ) =>
     {
