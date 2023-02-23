@@ -143,7 +143,7 @@ function updateState( state: string )
     // battery state
     const batteryLow = state.indexOf("BATTERY_LOW") !== -1;
     console.log( CYAN, `${timestamp()} Publishing Battery Low state: ${String(batteryLow).toUpperCase()}` );
-    mqttClient.publish(`${TOPIC("lock")}/battery_low`, batteryLow ? "on": "off" );
+    mqttClient.publish(`${TOPIC("binary_sensor")}/battery_low`, batteryLow ? "on": "off" );
 }
 
 process.stdin.resume(); //so the program will not close instantly
