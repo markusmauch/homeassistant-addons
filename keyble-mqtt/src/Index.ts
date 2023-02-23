@@ -19,8 +19,8 @@ const optionDefinitions: OptionDefinition[] = [
 
 const options = commandLineArgs(optionDefinitions);
 
-const HOST = "";
-const USERNAME = "";
+const HOST = options.host as string;
+const USERNAME = options.username as string;
 const PASSWORD = options.password as string;
 const ADDRESS = options.address as string;
 const USER_ID = options.user_id as number;
