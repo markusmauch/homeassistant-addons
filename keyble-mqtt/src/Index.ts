@@ -44,7 +44,7 @@ const log = ( msg: string ) => console.log( CYAN, `${timestamp()}: ${msg}` );
 
 const mqttClient = Mqtt.connect( `mqtt://${HOST}`, { username: USERNAME, password: PASSWORD } );
 
-const job = setIntervalAsync(() => queue.enqueue( async () => publishCurrentState() ), POLL_INTERVAL );
+const job = setIntervalAsync(() => queue.enqueue( async () => publishCurrentState() ), POLL_INTERVAL / 1000 );
 
 mqttClient.on( "error", error => console.error( error.message ) );
 
