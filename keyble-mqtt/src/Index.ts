@@ -1,7 +1,7 @@
 import commandLineArgs, { OptionDefinition } from "command-line-args";
 import Mqtt from "mqtt";
-import schedule from "node-schedule";
 import Queue from "queue-promise";
+import { clearIntervalAsync, setIntervalAsync } from "set-interval-async";
 import { lock, status, unlock } from "./Lock";
 
 const CYAN = '\x1b[36m%s\x1b[0m';
@@ -39,12 +39,12 @@ const queue = new Queue( {
     start: true,
 } );
 
-let job: schedule.Job;
-
 const timestamp = () => ( new Date().toISOString().substr(0,19) );
 const log = ( msg: string ) => console.log( CYAN, `${timestamp()}: ${msg}` );
 
 const mqttClient = Mqtt.connect( `mqtt://${HOST}`, { username: USERNAME, password: PASSWORD } );
+
+const job = setIntervalAsync(() => queue.enqueue( async () => publishCurrentState() ), POLL_INTERVAL );
 
 mqttClient.on( "error", error => console.error( error.message ) );
 
@@ -94,9 +94,6 @@ mqttClient.on( "connect", async () =>
         }
     );
 
-    publishCurrentState();
-    job = schedule.scheduleJob( `* 0/5 * * * *`, () => queue.enqueue( async () => publishCurrentState() ) );
-
     mqttClient.subscribe( subscription, {qos: 0}, ( err, res ) =>
     {
         if ( err )
@@ -108,6 +105,8 @@ mqttClient.on( "connect", async () =>
             log( `Subscribed to topic '${subscription}'` );
         }
     } );
+
+    publishCurrentState();
 } );
 
 mqttClient.on( "message", ( topic, message, info ) =>
@@ -167,7 +166,7 @@ function exitHandler( options: any, exitCode: any )
     if (options.cleanup)
     {
         mqttClient.unsubscribe( subscription );
-        job.cancel();
+        clearIntervalAsync( job );
         queue.stop();
         mqttClient.end();
     }
