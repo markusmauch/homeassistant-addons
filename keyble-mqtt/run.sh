@@ -2,7 +2,7 @@
 set -e
 
 CONFIG_PATH=/data/options.json
-CONNECTION_STRING="$(jq --raw-output '.connectionString' $CONFIG_PATH)"
+# CONNECTION_STRING="$(jq --raw-output '.connectionString' $CONFIG_PATH)"
 
 ADDRESS="$(jq --raw-output '.address' $CONFIG_PATH)"
 USER_ID="$(jq --raw-output '.user_id' $CONFIG_PATH)"
