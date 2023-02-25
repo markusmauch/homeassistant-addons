@@ -13,5 +13,11 @@ PASSWORD="$(jq --raw-output '.password' $CONFIG_PATH)"
 AUTO_DISCONNECT_TIME="$(jq --raw-output '.auto_disconnect_time' $CONFIG_PATH)"
 POLL_INTERVAL="$(jq --raw-output '.poll_interval' $CONFIG_PATH)"
 
+MQTT_HOST=$(bashio::services mqtt "host")
+MQTT_USER=$(bashio::services mqtt "username")
+MQTT_PASSWORD=$(bashio::services mqtt "password")
+
+echo $MQTT_HOST
+
 ./node_modules/typescript/bin/tsc
 node ./out/Index.js --host $HOST --username $USERNAME --password $PASSWORD --address $ADDRESS --user_id $USER_ID --user_key $USER_KEY --auto_disconnect_time $AUTO_DISCONNECT_TIME --poll_interval $POLL_INTERVAL
