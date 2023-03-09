@@ -1,0 +1,24 @@
+// 20230308142343
+// https://raw.githubusercontent.com/home-assistant/devcontainer/main/addons/tasks.json
+
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Start Home Assistant",
+        "type": "shell",
+        "command": "supervisor_run",
+        "group": {
+          "kind": "test",
+          "isDefault": true
+        },
+        "presentation": {
+          "reveal": "always",
+          "panel": "new"
+        },
+        "problemMatcher": [
+          
+        ]
+      }
+    ]
+  }
