@@ -10,6 +10,10 @@ export function execShellCommand( cmd: string ): Promise<string>
         {
             if ( error )
             {
+                if (error.code === 1)
+                {
+                    resolve(stdout);
+                }
                 console.warn( error );
                 reject( error );
             }
