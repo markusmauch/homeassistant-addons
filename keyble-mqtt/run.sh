@@ -15,6 +15,7 @@ DEBUG="$(jq --raw-output '.debug' $CONFIG_PATH)"
 
 if [ $DEBUG ]
 then
+    echo "Running in debug mode..."
     tail -f /dev/null
 else
     ./node_modules/typescript/bin/tsc
