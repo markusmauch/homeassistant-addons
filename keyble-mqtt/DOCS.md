@@ -6,8 +6,12 @@
 - host: The host name or IP address of the MQTT broker
 - username: The MQTT user name
 - password: The MQTT password
-- auto_disconnect_time: The auto disconnection time _in seconds_ of the keyble command
-- poll_interval: The polling time to retrieve the current state of the lock _in seconds_
+- auto*disconnect_time: The auto disconnection time \_in seconds* of the keyble command
+- poll*interval: The polling time to retrieve the current state of the lock \_in seconds*
 - debug: Runs the addon in debug mode
 
-Please follow the procedure described [here](https://github.com/oyooyo/keyble#keyble-registeruser) to obtain the user id and key.
+To obtain the user id and key, start the addon in debug mode and log into the container:
+
+`docker exec -it <containerid> /bin/bash`
+
+Then run the `keyble-registeruser` command as described [here](https://github.com/oyooyo/keyble#keyble-registeruser).
