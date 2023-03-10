@@ -13,7 +13,7 @@ AUTO_DISCONNECT_TIME="$(jq --raw-output '.auto_disconnect_time' $CONFIG_PATH)"
 POLL_INTERVAL="$(jq --raw-output '.poll_interval' $CONFIG_PATH)"
 DEBUG="$(jq --raw-output '.debug' $CONFIG_PATH)"
 
-if [ $DEBUG ]
+if [ $DEBUG = "True" ]
 then
     echo "Running in debug mode..."
     tail -f /dev/null
