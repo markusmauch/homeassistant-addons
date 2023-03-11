@@ -8,15 +8,6 @@ export function execShellCommand( cmd: string ): Promise<string>
     {
         exec( cmd, ( error: any, stdout: any, stderr: any ) =>
         {
-            if ( error )
-            {
-                if (error.code === 1)
-                {
-                    resolve(stdout);
-                }
-                console.warn( error );
-                reject( error );
-            }
             resolve( stdout? stdout : stderr );
         } );
     } );
