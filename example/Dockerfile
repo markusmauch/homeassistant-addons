@@ -1,5 +1,6 @@
-ARG BUILD_FROM
-FROM $BUILD_FROM
+FROM denoland/deno:alpine
+# ARG BUILD_FROM
+# FROM $BUILD_FROM
 ENV LANG C.UTF-8
 COPY run.sh /
 RUN chmod a+x /run.sh
