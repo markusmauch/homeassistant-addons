@@ -1,6 +1,6 @@
 name: "example"
 description: "Example Add-On"
-version: "1.0.2"
+version: "1.0.3"
 slug: "example"
 init: false
 #host_network: true
