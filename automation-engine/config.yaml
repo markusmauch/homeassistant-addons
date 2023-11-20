@@ -1,0 +1,27 @@
+name: "Home Assistant Automation Engine"
+description: "TypeScript based Home Assistant automation engine"
+version: "1.0.0"
+slug: "automation-engine"
+init: false
+host_network: true
+privileged:
+  # - NET_ADMIN
+  # - SYS_ADMIN
+arch:
+  - armv7
+options:
+  # mqtt_host: "homeassistant.local"
+  # mqtt_username: null
+  # mqtt_password: null
+  # topic: "powerbox"
+  # powerbox_host: "192.168.0.234"
+  # powerbox_port: 502
+  # powerbox_unit_id: 10
+schema:
+  # mqtt_host: str
+  # mqtt_username: str
+  # mqtt_password: password
+  # topic: str
+  # powerbox_host: str
+  # powerbox_port: int
+  # powerbox_unit_id: int
