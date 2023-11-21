@@ -2,7 +2,7 @@ ARG BUILD_FROM
 FROM $BUILD_FROM
 ENV LANG C.UTF-8
 
-RUN apk add curl --no-cache curl
+RUN apk add --no-cache curl
 RUN curl -fsSL https://deno.land/x/install/install.sh | sh
 
 RUN echo "OK"

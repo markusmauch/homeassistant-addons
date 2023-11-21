@@ -1,6 +1,3 @@
-// 20230308142343
-// https://raw.githubusercontent.com/home-assistant/devcontainer/main/addons/tasks.json
-
 {
     "version": "2.0.0",
     "tasks": [
@@ -16,9 +13,8 @@
           "reveal": "always",
           "panel": "new"
         },
-        "problemMatcher": [
-          
-        ]
+        "problemMatcher": []
       }
     ]
   }
+  
