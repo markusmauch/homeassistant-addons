@@ -10,8 +10,7 @@ RUN curl -J -L -o /tmp/bashio.tar.gz \
     && ln -s /usr/lib/bashio/bashio /usr/bin/bashio
 RUN npm install pm2 -g
 WORKDIR /app
-COPY run.sh .
-COPY src .
+COPY run.sh /app/
+COPY src/* /app/
 RUN chmod a+x run.sh
-CMD [ "run.sh" ]
-# ENTRYPOINT ["/bin/sh"]
+CMD [ "/app/run.sh" ]

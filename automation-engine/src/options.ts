@@ -1,18 +1,30 @@
 // Specify the path to the file
 const filePath = "/data/options.json";
 
-try {
-  // Read the contents of the file
-  const fileContent = await Deno.readTextFile(filePath);
+export class Options {
+  static _accessToken: string;
 
-  // Parse the JSON content
-  const jsonData = JSON.parse(fileContent);
+  public static async geAccessToken() {
+    if (this._accessToken === undefined) {
+      const options = await this.getOptions();
+      this._accessToken = options.access_token;
+    }
+    return this._accessToken;
+  }
 
-  // Display the parsed JSON data
-  console.log(jsonData);
-} catch (error) {
-  console.error(`Error reading or parsing the file: ${error.message}`);
+  private static async getOptions()
+  {
+    try {
+      const fileContent = await Deno.readTextFile(filePath);
+      const jsonData = JSON.parse(fileContent);
+      return jsonData;
+    } catch (error) {
+      console.error(`Error reading or parsing the file: ${error.message}`);
+    }
+  }
 }
 
+
+
 // Close Deno
-Deno.exit();
+// Deno.exit();

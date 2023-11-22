@@ -4,6 +4,12 @@ version: "1.0.1"
 slug: "automation-engine"
 init: false
 host_network: true
+map:
+  - addons:rw
+# privileged:
+#   - NET_ADMIN
+#   - SYS_ADMIN
+homeassistant_api: true
 arch:
   - armv7
   - i386
