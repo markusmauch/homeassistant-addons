@@ -14,15 +14,11 @@ SENSOR_CONFIG='{
   }
 }'
 
-# Define the MQTT topic for Home Assistant auto-discovery
-DISCOVERY_TOPIC="homeassistant/sensor/balkonsolar_total_photovoltaic_power/config"
-
-# Publish the sensor configuration to the MQTT broker
-bashio::mqtt.publish -t "$DISCOVERY_TOPIC" -m "$SENSOR_CONFIG" -r
+# Announce the sensor to Home Assistant using bashio::discovery
+bashio::discovery "sensor" "balkonsolar_total_photovoltaic_power" "$SENSOR_CONFIG"
 
 # Log a message indicating that the sensor has been announced
 bashio::log.info "Balkonsolar Total Photovoltaic Power sensor has been announced to Home Assistant."
-
 
 
 node ./bin/app.js
