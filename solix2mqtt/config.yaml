@@ -1,14 +1,11 @@
-name: "Home Assistant Automation Engine"
-description: "TypeScript based Home Assistant automation engine"
-version: "1.0.1"
-slug: "automation-engine"
+name: "Solix 2 MQTT"
+description: ""
+version: "1.0.2"
+slug: "solix2mqtt"
 init: false
 host_network: true
 map:
   - addons:rw
-# privileged:
-#   - NET_ADMIN
-#   - SYS_ADMIN
 homeassistant_api: true
 arch:
   - armv7
