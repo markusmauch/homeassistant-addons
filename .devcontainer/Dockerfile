@@ -13,7 +13,8 @@ RUN \
     dbus \
     network-manager \
     libpulse0 \
-    xz-utils
+    xz-utils \
+    npm
 
 COPY ./common/rootfs /
 COPY ./common/rootfs_supervisor /

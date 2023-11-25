@@ -22,5 +22,5 @@
       "files.trimTrailingWhitespace": true
     }
   }},
-  "mounts": [ "type=volume,target=/var/lib/docker" ]
+  "mounts": [ {"type": "volume", "target": "/var/lib/docker"} ]
 }

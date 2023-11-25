@@ -3,16 +3,19 @@ description: "TypeScript based Home Assistant automation engine"
 version: "1.0.1"
 slug: "automation-engine"
 init: false
-host_network: true
 map:
   - addons:rw
 # privileged:
 #   - NET_ADMIN
 #   - SYS_ADMIN
+# homeassistant: true
 homeassistant_api: true
 arch:
   - armv7
   - i386
+host_network: true
+ingress: true
+# webui: true
 options:
   access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI1NTUwYjA1ZmM4MWI0Nzk3YmVkYWFlZWRkMDMwZDM4YiIsImlhdCI6MTcwMDU5NzcwMCwiZXhwIjoyMDE1OTU3NzAwfQ.B-K6hSwB_8t4P-Xic1uR6-NU24-dNvkrOVXDAJ66V-o"
 schema:
