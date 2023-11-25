@@ -17,4 +17,6 @@ ENV S2M_COUNTRY=DE
 ENV S2M_MQTT_URI=mqtt://192.168.0.4:1883
 ENV S2M_MQTT_USERNAME=pi
 ENV S2M_MQTT_PASSWORD=fli4l2WL500g
-ENTRYPOINT [ "/bin/sh" ]
+COPY run.sh ./
+RUN chmod a+x run.sh
+CMD [ "./run.sh" ]
