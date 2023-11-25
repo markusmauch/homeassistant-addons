@@ -1,6 +1,6 @@
 name: "Solix 2 MQTT"
 description: ""
-version: "1.0.2"
+version: "1.0.3"
 slug: "solix2mqtt"
 init: false
 host_network: true
