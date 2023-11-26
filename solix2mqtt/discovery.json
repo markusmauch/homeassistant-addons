@@ -1,0 +1,14 @@
+{
+    "name": "Balkonsolar Total Photovoltaic Power",
+    "state_topic": "solix/site/Balkonsolar/scenInfo",
+    "value_template": "{{ value_json.solarbank_info.total_photovoltaic_power }}",
+    "unit_of_measurement": "W",
+    "device": {
+        "identifiers": [
+            "balkonsolar"
+        ],
+        "name": "Balkonsolar",
+        "model": "Solarbank E1600",
+        "manufacturer": "YourManufacturer"
+    }
+}

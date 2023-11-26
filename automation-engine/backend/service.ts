@@ -18,6 +18,102 @@ router.get('/api/hello', (ctx) => {
   ctx.response.body = 'Hello, World!';
 });
 
+router.get("/api/start", async (context) => {
+    try {
+      // Execute the PM2 list command
+      const process = Deno.run({
+        cmd: ["pm2", "start", "ping", "--", "localhost"],
+        stdout: "piped",
+        stderr: "piped",
+      });
+
+      const [status, stdout, stderr] = await Promise.all([
+        process.status(),
+        process.output(),
+        process.stderrOutput(),
+      ]);
+
+      process.close();
+
+      if (status.success) {
+        context.response.status = 200;
+        context.response.body = new TextDecoder().decode(stdout);
+      } else {
+        context.response.status = 500;
+        context.response.body = new TextDecoder().decode(stderr);
+      }
+    } catch (error) {
+      console.error(error);
+      context.response.status = 500;
+      context.response.body = "Error getting PM2 list";
+    }
+  });
+
+
+// Endpoint to stop PM2
+router.get("/api/stop", async (context) => {
+  try {
+    // Execute the PM2 list command
+    const process = Deno.run({
+      cmd: ["pm2", "stop", "all"],
+      stdout: "piped",
+      stderr: "piped",
+    });
+
+    const [status, stdout, stderr] = await Promise.all([
+      process.status(),
+      process.output(),
+      process.stderrOutput(),
+    ]);
+
+    process.close();
+
+    if (status.success) {
+      context.response.status = 200;
+      context.response.body = new TextDecoder().decode(stdout);
+    } else {
+      context.response.status = 500;
+      context.response.body = new TextDecoder().decode(stderr);
+    }
+  } catch (error) {
+    console.error(error);
+    context.response.status = 500;
+    context.response.body = "Error getting PM2 list";
+  }
+});
+
+
+router.get("/api/list", async (context) => {
+  try {
+    // Execute the PM2 list command
+    const process = Deno.run({
+      cmd: ["pm2", "list"],
+      stdout: "piped",
+      stderr: "piped",
+    });
+
+    const [status, stdout, stderr] = await Promise.all([
+      process.status(),
+      process.output(),
+      process.stderrOutput(),
+    ]);
+
+    process.close();
+
+    if (status.success) {
+      context.response.status = 200;
+      context.response.body = new TextDecoder().decode(stdout);
+    } else {
+      context.response.status = 500;
+      context.response.body = new TextDecoder().decode(stderr);
+    }
+  } catch (error) {
+    console.error(error);
+    context.response.status = 500;
+    context.response.body = "Error getting PM2 list";
+  }
+});
+
 router.get("/:path*", async (ctx) => {
   const path = ctx.params.path || ""; // Capture the path parameter
   let newPath = path === "" ? "index.html" : path;
