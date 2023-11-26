@@ -1,6 +1,6 @@
 FROM denoland/deno:alpine
 
-RUN apk add --no-cache npm curl jq bash nginx
+RUN apk add --no-cache npm curl jq bash
 
 # bashio
 ARG BASHIO_VERSION="v0.16.0"
@@ -13,10 +13,6 @@ RUN curl -J -L -o /tmp/bashio.tar.gz \
 
 # pm2
 RUN npm install pm2 -g
-
-# nginx
-RUN mkdir -p /run/nginx
-COPY ingress.conf /etc/nginx/http.d/
 
 # frontend
 WORKDIR /app/frontend
@@ -40,4 +36,3 @@ WORKDIR /app
 COPY run.sh /app/
 RUN chmod a+x run.sh
 CMD [ "/app/run.sh" ]
-# CMD [ "nginx","-g","daemon off;error_log /dev/stdout debug;" ]

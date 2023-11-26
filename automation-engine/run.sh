@@ -7,9 +7,9 @@
 # deno run https://examples.deno.land/hello-world.ts
 
 #Launch nginx with debug options.
-nginx -g "daemon off;error_log /dev/stdout debug;"
-
-deno run --allow-net /app/backend/service.ts
+# nginx -g "daemon off;error_log /dev/stdout debug;" &
+deno run --allow-net --allow-read /app/backend/service.ts &
+wait
 
 # deno run --allow-read --allow-net --allow-env /app/index.ts
 
