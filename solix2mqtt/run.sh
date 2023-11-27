@@ -1,11 +1,11 @@
 #!/usr/bin/env bashio
 
-S2M_USER="$(bashio::config 'user')"
-S2M_PASSWORD="$(bashio::config 'password')"
-S2M_COUNTRY="$(bashio::config 'country')"
-S2M_MQTT_HOST="$(bashio::config 'mqtt_host')"
-S2M_MQTT_USERNAME="$(bashio::config 'mqtt_username')"
-S2M_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
+export S2M_USER="$(bashio::config 'user')"
+export S2M_PASSWORD="$(bashio::config 'password')"
+export S2M_COUNTRY="$(bashio::config 'country')"
+export S2M_MQTT_HOST="$(bashio::config 'mqtt_host')"
+export S2M_MQTT_USERNAME="$(bashio::config 'mqtt_username')"
+export S2M_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
 
 
 # Define the configuration for the sensor
