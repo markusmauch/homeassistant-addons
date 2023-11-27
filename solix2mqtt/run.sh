@@ -26,4 +26,4 @@ echo $PAYLOAD
 TOPIC="homeassistant/sensor/my_sensor/config"
 mosquitto_pub -h $S2M_MQTT_URI -t $TOPIC -m "$PAYLOAD"
 
-node ./bin/app.js
+# node ./bin/app.js
