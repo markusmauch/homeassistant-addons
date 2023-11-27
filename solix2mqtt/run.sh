@@ -13,7 +13,7 @@ export S2M_MQTT_URI="mqtt://$S2M_MQTT_HOST:1883"
 PAYLOAD=$(echo '{
   "name": "Solarbank E1600 Battery Power",
   "state_topic": "solix/site/Balkonsolar/scenInfo",
-  "value_template": "{{ value_json.solarbank_info.solarbank_list[0].battery_power }}",
+  "value_template": "{{ value_json.solarbank_info.solarbank_list[0].battery_power | float }}",
   "device_class": "battery",
   "unit_of_measurement": "W",
   "unique_id": "solarbank_e1600_battery_power",
