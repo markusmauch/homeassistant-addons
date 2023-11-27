@@ -22,7 +22,7 @@ PAYLOAD=$(echo '{
   "payload_not_available": "offline"
 }' | jq -c '.')
 
-TOPIC="homeassistant/sensor/my_sensor/config"
+TOPIC="homeassistant/sensor/solarbank_e1600_battery_power/config"
 echo $S2M_USER
 echo $S2M_PASSWORD
 echo $S2M_MQTT_HOST
