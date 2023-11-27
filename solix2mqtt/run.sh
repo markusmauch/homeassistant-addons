@@ -6,6 +6,7 @@ export S2M_COUNTRY="$(bashio::config 'country')"
 export S2M_MQTT_HOST="$(bashio::config 'mqtt_host')"
 export S2M_MQTT_USERNAME="$(bashio::config 'mqtt_username')"
 export S2M_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
+export S2M_MQTT_URI="mqtt://$S2M_MQTT_HOST:1883"
 
 
 # Define the configuration for the sensor
