@@ -24,6 +24,6 @@ PAYLOAD=$(echo '{
 
 echo "$PAYLOAD"
 TOPIC="homeassistant/sensor/my_sensor/config"
-mosquitto_pub -h "$S2M_MQTT_URI" -u "$S2M_MQTT_USERNAME" -p "$S2M_MQTT_PASSWORD" -t $TOPIC -m "$PAYLOAD"
+mosquitto_pub -h "$S2M_MQTT_URI" -u "$S2M_MQTT_USERNAME" -p "$S2M_MQTT_PASSWORD" -t "$TOPIC" -m "$PAYLOAD"
 
 # node ./bin/app.js
