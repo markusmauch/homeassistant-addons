@@ -11,16 +11,15 @@ export S2M_MQTT_URI="mqtt://$S2M_MQTT_HOST:1883"
 
 # Define the configuration for the sensor
 PAYLOAD=$(echo '{
-    "name": "Balkonsolar Total Photovoltaic Power",
-    "state_topic": "solix/site/Balkonsolar/scenInfo",
-    "value_template": "{{ value_json.solarbank_info.total_photovoltaic_power }}",
-    "unit_of_measurement": "W",
-    "device": {
-        "identifiers": [ "balkonsolar" ],
-        "name": "Balkonsolar",
-        "model": "Solarbank E1600",
-        "manufacturer": "YourManufacturer"
-    }
+  "name": "Solarbank E1600 Battery Power",
+  "state_topic": "solix/site/Balkonsolar/scenInfo",
+  "value_template": "{{ value_json.solarbank_info.solarbank_list[0].battery_power }}",
+  "device_class": "battery",
+  "unit_of_measurement": "W",
+  "unique_id": "solarbank_e1600_battery_power",
+  "availability_topic": "solix/site/Balkonsolar/scenInfo",
+  "payload_available": "online",
+  "payload_not_available": "offline"
 }' | jq -c '.')
 
 TOPIC="homeassistant/sensor/my_sensor/config"
