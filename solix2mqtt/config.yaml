@@ -16,7 +16,7 @@ options:
   country: "DE"
   mqtt_uri: "mqtt://192.168.0.4:1883"
   mqtt_username: "pi"
-  mqtt_password: "fli4l2WL500g"
+  mqtt_password: ""
 schema:
   user: str
   password: str
