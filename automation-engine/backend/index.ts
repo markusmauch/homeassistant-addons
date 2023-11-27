@@ -34,7 +34,12 @@ export namespace HA {
                 await call("light", "toggle", entityId);
             }
         }
+        export namespace InputBoolean {
+            export async function toggle(entityId: string) {
+                await call("input_boolean", "toggle", entityId);
+            }
+        }
     }
 }
 
-HA.Service.Light.toggle("input_boolean.licht_buro");
+HA.Service.InputBoolean.toggle("input_boolean.licht_buro");
