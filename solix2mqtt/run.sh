@@ -7,22 +7,19 @@ export S2M_MQTT_HOST="$(bashio::config 'mqtt_host')"
 export S2M_MQTT_USERNAME="$(bashio::config 'mqtt_username')"
 export S2M_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
 export S2M_MQTT_URI="mqtt://$S2M_MQTT_HOST:1883"
+# export S2M_MQTT_TOPIC="homeassistant/"
 
-
-# Define the configuration for the sensor
+TOPIC="homeassistant/sensor/solarbank_e1600/battery_power/config"
 PAYLOAD=$(echo '{
   "name": "Solarbank E1600 Battery Power",
   "state_topic": "solix/site/Balkonsolar/scenInfo",
   "value_template": "{{ value_json.solarbank_info.solarbank_list[0].battery_power | float }}",
   "device_class": "battery",
   "unit_of_measurement": "W",
-  "unique_id": "solarbank_e1600_battery_power",
-  "availability_topic": "solix/site/Balkonsolar/scenInfo",
-  "payload_available": "online",
-  "payload_not_available": "offline"
+  "unique_id": "solarbank_e1600_battery_power"
 }' | jq -c '.')
 
-TOPIC="homeassistant/sensor/solarbank_e1600_battery_power/config"
+
 echo $S2M_USER
 echo $S2M_PASSWORD
 echo $S2M_MQTT_HOST
