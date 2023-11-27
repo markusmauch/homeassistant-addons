@@ -3,7 +3,7 @@
 S2M_USER=$(bashio::config 'user')
 S2M_PASSWORD=$(bashio::config 'password')
 S2M_COUNTRY=$(bashio::config 'country')
-S2M_MQTT_URI=$(bashio::config 'mqtt_uri')
+S2M_MQTT_HOST=$(bashio::config 'mqtt_host')
 S2M_MQTT_USERNAME=$(bashio::config 'mqtt_username')
 S2M_MQTT_PASSWORD=$(bashio::config 'mqtt_password')
 
@@ -24,6 +24,6 @@ PAYLOAD=$(echo '{
 
 echo "$PAYLOAD"
 TOPIC="homeassistant/sensor/my_sensor/config"
-# mosquitto_pub -h "$S2M_MQTT_URI" -u "$S2M_MQTT_USERNAME" -p "$S2M_MQTT_PASSWORD" -t "$TOPIC" -m "$PAYLOAD"
+mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$TOPIC" -m "$PAYLOAD"
 top
 # node ./bin/app.js
