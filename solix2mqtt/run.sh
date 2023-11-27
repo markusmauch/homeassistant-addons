@@ -18,6 +18,7 @@ PAYLOAD=$(echo '{
   "unit_of_measurement": "%",
   "unique_id": "solarbank_e1600_battery_level"
 }' | jq -c '.')
+mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$TOPIC" -m "$PAYLOAD"
 
 TOPIC="homeassistant/sensor/solarbank_e1600/photovoltaic_power/config"
 PAYLOAD=$(echo '{
@@ -28,6 +29,7 @@ PAYLOAD=$(echo '{
   "unit_of_measurement": "W",
   "unique_id": "solarbank_e1600_photovoltaic_power"
 }' | jq -c '.')
+mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$TOPIC" -m "$PAYLOAD"
 
 TOPIC="homeassistant/sensor/solarbank_e1600/output_power/config"
 PAYLOAD=$(echo '{
@@ -38,6 +40,7 @@ PAYLOAD=$(echo '{
   "unit_of_measurement": "W",
   "unique_id": "solarbank_e1600_output_power"
 }' | jq -c '.')
+mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$TOPIC" -m "$PAYLOAD"
 
 TOPIC="homeassistant/sensor/solarbank_e1600/charging_power/config"
 PAYLOAD=$(echo '{
@@ -48,7 +51,7 @@ PAYLOAD=$(echo '{
   "unit_of_measurement": "W",
   "unique_id": "solarbank_e1600_charging_power"
 }' | jq -c '.')
-
+mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$TOPIC" -m "$PAYLOAD"
 
 echo $S2M_USER
 echo $S2M_PASSWORD
@@ -57,6 +60,6 @@ echo $S2M_MQTT_USERNAME
 echo $S2M_MQTT_PASSWORD
 echo $TOPIC
 echo $PAYLOAD
-mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$TOPIC" -m "$PAYLOAD"
+
 # top
 node ./bin/app.js
