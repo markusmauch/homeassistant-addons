@@ -18,9 +18,10 @@ publish_sensor() {
   local device_class="$4"
   local unit_of_measurement="$5"
   local unique_id="$6"
+  local state_topic="solix/site/Balkonsolar/scenInfo"
 
-  local payload=$(jq -c -n --arg name "$name" --arg topic "$topic" --arg value_template "$value_template" --arg device_class "$device_class" --arg unit_of_measurement "$unit_of_measurement" --arg unique_id "$unique_id" '{"name": $name, "state_topic": $topic, "value_template": $value_template, "device_class": $device_class, "unit_of_measurement": $unit_of_measurement, "unique_id": $unique_id}')
-  echo Announcing entity '$name'.
+  local payload=$(jq -c -n --arg name "$name" --arg topic "$topic" --arg state_topic "$state_topic" --arg value_template "$value_template" --arg device_class "$device_class" --arg unit_of_measurement "$unit_of_measurement" --arg unique_id "$unique_id" '{"name": $name, "state_topic": $state_topic, "value_template": $value_template, "device_class": $device_class, "unit_of_measurement": $unit_of_measurement, "unique_id": $unique_id}')
+  echo Announcing entity '$payload'
   mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$topic" -m "$payload"
 }
 
@@ -40,4 +41,4 @@ publish_sensor "homeassistant/sensor/solarbank_e1600/charging_power/config" "Sol
 publish_sensor "homeassistant/sensor/solarbank_e1600/updated_time/config" "Solarbank E1600 Last Update" "{{ value_json.solarbank_info.updated_time, '%Y-%m-%d %H:%M:%S') }}" "timestamp" "" "solarbank_e1600_charging_power"
 
 # top
-node ./bin/app.js
+# node ./bin/app.js
