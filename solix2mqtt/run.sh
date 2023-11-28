@@ -20,7 +20,7 @@ publish_sensor() {
   local unique_id="$6"
 
   local payload=$(jq -c -n --arg name "$name" --arg topic "$topic" --arg value_template "$value_template" --arg device_class "$device_class" --arg unit_of_measurement "$unit_of_measurement" --arg unique_id "$unique_id" '{"name": $name, "state_topic": $topic, "value_template": $value_template, "device_class": $device_class, "unit_of_measurement": $unit_of_measurement, "unique_id": $unique_id}')
-
+  echo Announcing entity '$name'.
   mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$topic" -m "$payload"
 }
 
