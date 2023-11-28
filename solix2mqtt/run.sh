@@ -30,6 +30,8 @@ publish_sensor() {
   )
   echo Announcing entity: \'$name\' with payload
   echo $payload
+  mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$topic" -m "$payload" --retain
+  echo "Done."
   echo ""
 }
 
@@ -51,4 +53,4 @@ publish_sensor "homeassistant/sensor/solarbank_e1600/charging_power/config" "Sol
 # Publish last update
 publish_sensor "homeassistant/sensor/solarbank_e1600/updated_time/config" "Solarbank E1600 Last Update" "solarbank_e1600_last_update" "{{ value_json.solarbank_info.updated_time, '%Y-%m-%d %H:%M:%S') }}"
 
-# node ./bin/app.js
+node ./bin/app.js
