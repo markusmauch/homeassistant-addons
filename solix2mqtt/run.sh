@@ -38,7 +38,6 @@ publish_sensor "homeassistant/sensor/solarbank_e1600/output_power/config" "Solar
 publish_sensor "homeassistant/sensor/solarbank_e1600/charging_power/config" "Solarbank E1600 Charging Power" "{{ value_json.solarbank_info.total_charging_power | float }}" "power" "W" "solarbank_e1600_charging_power"
 
 # Publish last update
-publish_sensor "homeassistant/sensor/solarbank_e1600/updated_time/config" "Solarbank E1600 Last Update" "{{ value_json.solarbank_info.updated_time, '%Y-%m-%d %H:%M:%S') }}" "timestamp" "" "solarbank_e1600_updated_time"
+publish_sensor "homeassistant/sensor/solarbank_e1600/updated_time/config" "Solarbank E1600 Last Update" "{{ value_json.solarbank_info.updated_time, '%Y-%m-%d %H:%M:%S') }}" "timestamp" "" "solarbank_e1600_last_update"
 
-# top
-# node ./bin/app.js
+node ./bin/app.js
