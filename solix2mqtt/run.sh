@@ -16,8 +16,8 @@ publish_sensor() {
   local name="$2"
   local unique_id="$3"
   local value_template="$4"
-  local device_class="$5"
-  local unit_of_measurement="$6"
+  local device_class={$5:-""}
+  local unit_of_measurement={$6:-""}
   local state_topic="solix/site/Balkonsolar/scenInfo"
 
   local payload=$(jq -c -n --arg name "$name" --arg topic "$topic" --arg state_topic "$state_topic" --arg value_template "$value_template" --arg device_class "$device_class" --arg unit_of_measurement "$unit_of_measurement" --arg unique_id "$unique_id" '{"name": $name, "state_topic": $state_topic, "value_template": $value_template, "device_class": $device_class, "unit_of_measurement": $unit_of_measurement, "unique_id": $unique_id} | with_entries(select(.unit_of_measurement != "" or .device_class != ""))')
