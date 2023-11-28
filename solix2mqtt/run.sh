@@ -9,21 +9,21 @@ export S2M_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
 export S2M_MQTT_URI="mqtt://$S2M_MQTT_HOST:1883"
 # export S2M_MQTT_TOPIC="homeassistant/"
 
-
 # Function to publish MQTT messages for a sensor
 publish_sensor() {
   local topic="$1"
   local name="$2"
   local unique_id="$3"
   local value_template="$4"
-  local device_class="{$5:-""}"
-  local unit_of_measurement="{$6:-""}"
+  local device_class="${5:-null}"
+  local unit_of_measurement="${6:-null}"
   local state_topic="solix/site/Balkonsolar/scenInfo"
-
-  local payload=$(jq -c -n --arg name "$name" --arg topic "$topic" --arg state_topic "$state_topic" --arg value_template "$value_template" --arg device_class "$device_class" --arg unit_of_measurement "$unit_of_measurement" --arg unique_id "$unique_id" '{"name": $name, "state_topic": $state_topic, "value_template": $value_template, "device_class": $device_class, "unit_of_measurement": $unit_of_measurement, "unique_id": $unique_id} | with_entries(select(.unit_of_measurement != "" or .device_class != ""))')
-  echo Announcing entity $payload
-  mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$topic" -m "$payload"
+  local payload=$(jq -c -n --arg name "$name" --arg topic "$topic" --arg state_topic "$state_topic" --arg value_template "$value_template" --arg device_class "$device_class" --arg unit_of_m>
+  echo Announcing entity: \'$name\' with payload
+  echo $payload
+  echo ""
 }
+
 
 # Publish battery level sensor
 publish_sensor "homeassistant/sensor/solarbank_e1600/battery_level/config" "Solarbank E1600 Battery Level" "solarbank_e1600_battery_level" "{{ value_json.solarbank_info.total_battery_power | float * 100 }}" "battery" "%"
