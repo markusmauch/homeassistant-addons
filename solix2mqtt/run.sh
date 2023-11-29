@@ -7,6 +7,7 @@ export S2M_MQTT_HOST="$(bashio::config 'mqtt_host')"
 export S2M_MQTT_USERNAME="$(bashio::config 'mqtt_username')"
 export S2M_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
 export S2M_MQTT_URI="mqtt://$S2M_MQTT_HOST:1883"
+export S2M_VERBOSE=true
 # export S2M_MQTT_TOPIC="homeassistant/"
 
 # Function to publish MQTT messages for a sensor
@@ -52,5 +53,9 @@ publish_sensor "homeassistant/sensor/solarbank_e1600/charging_power/config" "Sol
 
 # Publish last update
 publish_sensor "homeassistant/sensor/solarbank_e1600/last_update/config" "Solarbank E1600 Last Update" "solarbank_e1600_last_update" "{{ value_json.solarbank_info.updated_time }}"
+
+# Publish charging status
+publish_sensor "homeassistant/sensor/solarbank_e1600/charging_status/config" "Solarbank E1600 Charging Status" "solarbank_e1600_charging_status" "{{ value_json.solarbank_info.charging_status }}"
+
 
 node ./bin/app.js

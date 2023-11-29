@@ -1,6 +1,6 @@
 name: "Solix 2 MQTT"
 description: "Anker Solix E1600 MQTT integration"
-version: "1.0.36"
+version: "1.1.0"
 slug: "solix2mqtt"
 init: false
 host_network: true
@@ -11,11 +11,11 @@ arch:
   - armv7
   - i386
 options:
-  user: "markus.mauch@gmail.com"
-  password: "C@qF3ab$u&RYNhgsJJ"
-  country: "DE"
-  mqtt_host: "192.168.0.4"
-  mqtt_username: "pi"
+  user: ""
+  password: ""
+  country: ""
+  mqtt_host: ""
+  mqtt_username: ""
   mqtt_password: ""
 schema:
   user: str
