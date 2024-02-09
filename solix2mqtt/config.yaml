@@ -1,6 +1,6 @@
 name: "Solix 2 MQTT"
 description: "Anker Solix E1600 MQTT integration"
-version: "1.1.1"
+version: "1.2.0"
 slug: "solix2mqtt"
 init: false
 host_network: true
@@ -13,16 +13,18 @@ arch:
 options:
   user: ""
   password: ""
-  country: ""
-  mqtt_host: ""
+  country: "DE"
+  mqtt_uri: "mqtt://homeassistant.local:1883"
   mqtt_username: ""
   mqtt_password: ""
+  mqtt_topic: "solix/site/Balkonsolar/scenInfo"
   poll_interval: 30
 schema:
   user: str
   password: str
   country: str
-  mqtt_host: str
+  mqtt_uri: str
   mqtt_username: str
   mqtt_password: str
+  mqtt_topic: str
   poll_interval: int
