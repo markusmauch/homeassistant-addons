@@ -10,11 +10,14 @@ export S2M_MQTT_TOPIC="$(bashio::config 'mqtt_topic')"
 export S2M_POLL_INTERVAL="$(bashio::config 'poll_interval')"
 export S2M_VERBOSE=true
 
+# Get username, password, scheme, hostname and port from URI
+function parse_uri() {
+	uri=$1
+	key=$2
+	echo $(python3 -c "from urllib.parse import urlparse; value=urlparse('$uri').$key; print(value) if value is not None else None")
+}
 
- 
-
-
-# Function to publish MQTT messages for a sensor
+# Publish MQTT messages for a sensor
 publish_sensor() {
 	local topic="$1"
 	local name="$2"
@@ -24,11 +27,11 @@ publish_sensor() {
 	local unit_of_measurement="${6:-null}"
 	local state_topic=$S2M_MQTT_TOPIC
 
-	local username=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').username)")
-	local password=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').password)")
-	local scheme=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').scheme)")
-	local hostname=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').hostname)")
-	local port=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').port)")
+	local username=$(parse_uri $S2M_MQTT_URI, username)
+	local password=$(parse_uri $S2M_MQTT_URI, password)
+	local scheme=$(parse_uri $S2M_MQTT_URI, scheme)
+	local hostname=$(parse_uri $S2M_MQTT_URI, hostname)
+	local port=$(parse_uri $S2M_MQTT_URI, port)
 
 	local payload=$(
 		jq -c -n \
@@ -49,7 +52,13 @@ publish_sensor() {
 }
 
 # Publish battery level sensor
-publish_sensor "homeassistant/sensor/solarbank_e1600/battery_level/config" "Solarbank E1600 Battery Level" "solarbank_e1600_battery_level" "{{ value_json.solarbank_info.total_battery_power | float * 100 }}" "battery" "%"
+publish_sensor \
+	"homeassistant/sensor/solarbank_e1600/battery_level/config" \
+	"Solarbank E1600 Battery Level"\
+	"solarbank_e1600_battery_level" \
+	"{{ value_json.solarbank_info.total_battery_power | float * 100 }}" \
+	"battery" \
+	"%"
 
 # Publish photovoltaic power sensor
 publish_sensor \
