@@ -111,4 +111,31 @@ publish_sensor \
 	"solarbank_e1600_charging_status" \
 	"{{ value_json.solarbank_info.solarbank_list[0].charging_status }}"
 
+# Publish statistics yield
+publish_sensor \
+	"homeassistant/sensor/solarbank_e1600/statistics/yield/config" \
+	"Solarbank E1600 Statistics Yield" \
+	"solarbank_e1600_statistics_yield" \
+	"{{ value_json.solarbank_info.statistics[0].total }}" \
+	"energy" \
+	"kWh"
+
+# Publish statistics co2 savings
+publish_sensor \
+	"homeassistant/sensor/solarbank_e1600/statistics/co2_savings/config" \
+	"Solarbank E1600 Statistics CO2 Savings" \
+	"solarbank_e1600_statistics_co2_savings" \
+	"{{ value_json.solarbank_info.statistics[1].total }}" \
+	"mass" \
+	"kg"
+
+# Publish statistics saved costs
+publish_sensor \
+	"homeassistant/sensor/solarbank_e1600/statistics/saved_costs/config" \
+	"Solarbank E1600 Charging Statistics Saved Costs" \
+	"solarbank_e1600_statistics_saved_costs" \
+	"{{ value_json.solarbank_info.statistics[2].total }}" \
+	"currency" \
+	"{{ value_json.solarbank_info.statistics[2].unit }}"
+
 node ./bin/app.js
