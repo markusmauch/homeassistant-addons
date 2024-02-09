@@ -18,6 +18,8 @@ __mqtt_username__: Optional username for MQTT authentication
 
 __mqtt_password__: Optional password for MQTT authentication
 
+__mqtt_topic__: Topic where data will be be published
+
 ## Breaking changes
 
 ### Version 1.2
