@@ -113,7 +113,7 @@ publish_sensor \
 
 # Publish statistics yield
 publish_sensor \
-	"homeassistant/sensor/solarbank_e1600/statistics/yield/config" \
+	"homeassistant/sensor/solarbank_e1600/statistics_yield/config" \
 	"Solarbank E1600 Statistics Yield" \
 	"solarbank_e1600_statistics_yield" \
 	"{{ value_json.statistics[0].total }}" \
@@ -122,7 +122,7 @@ publish_sensor \
 
 # Publish statistics co2 savings
 publish_sensor \
-	"homeassistant/sensor/solarbank_e1600/statistics/co2_savings/config" \
+	"homeassistant/sensor/solarbank_e1600/statistics_co2_savings/config" \
 	"Solarbank E1600 Statistics CO2 Savings" \
 	"solarbank_e1600_statistics_co2_savings" \
 	"{{ value_json.statistics[1].total }}" \
@@ -131,7 +131,7 @@ publish_sensor \
 
 # Publish statistics saved costs
 publish_sensor \
-	"homeassistant/sensor/solarbank_e1600/statistics/saved_costs/config" \
+	"homeassistant/sensor/solarbank_e1600/statistics_saved_costs/config" \
 	"Solarbank E1600 Charging Statistics Saved Costs" \
 	"solarbank_e1600_statistics_saved_costs" \
 	"{{ value_json.statistics[2].total }}" \
