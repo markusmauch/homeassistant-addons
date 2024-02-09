@@ -44,7 +44,8 @@ publish_sensor() {
 			--arg unique_id "$unique_id" \
 			'{"name": $name, "state_topic": $state_topic, "value_template": $value_template, "device_class": $device_class, "unit_of_measurement": $unit_of_measurement, "unique_id": $unique_id} | with_entries(select(.value!="null"))'
 	)
-	echo Connecting to host: "$hostname:${port:-1883}"
+	echo Connecting to host: "$scheme"://"$hostname:${port:-1883}"
+	echo
 	echo Announcing entity: \'$name\' with payload
 	echo $payload
 	mosquitto_pub -h "$hostname" -p "${port:-1883}" -u "${S2M_MQTT_USERNAME:-$username}" -P "${S2M_MQTT_PASSWORD:-$password}" -t "$topic" -m "$payload" --retain
@@ -57,7 +58,7 @@ publish_sensor \
 	"homeassistant/sensor/solarbank_e1600/battery_level/config" \
 	"Solarbank E1600 Battery Level"\
 	"solarbank_e1600_battery_level" \
-	"{{ value_json.solarbank_info.total_battery_power | float }}" \
+	"{{ value_json.solarbank_info.total_battery_power | (float*100) }}" \
 	"battery" \
 	"%"
 
