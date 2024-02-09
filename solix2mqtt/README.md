@@ -20,6 +20,6 @@ __mqtt_password__: Optional password for MQTT authentication
 
 ## Breaking changes
 
-### Version 1.2.0
+### Version 1.2
 
 - Configuration parameter mqtt_host has been replaced by mqtt_uri. So it is now possible __and required__ to also specify the protocol and port.

@@ -32,7 +32,7 @@ publish_sensor() {
 	)
 	echo Announcing entity: \'$name\' with payload
 	echo $payload
-	mosquitto_pub -h "$S2M_MQTT_HOST" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$topic" -m "$payload" --retain
+	mosquitto_pub -h "$S2M_MQTT_URI" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$topic" -m "$payload" --retain
 	echo "Done."
 	echo ""
 }
