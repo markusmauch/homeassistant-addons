@@ -109,6 +109,6 @@ publish_sensor \
 	"homeassistant/sensor/solarbank_e1600/charging_status/config" \
 	"Solarbank E1600 Charging Status" \
 	"solarbank_e1600_charging_status" \
-	"{{ value_json.solarbank_info.charging_status }}"
+	"{{ value_json.solarbank_info.solarbank_list[0].charging_status }}"
 
 node ./bin/app.js
