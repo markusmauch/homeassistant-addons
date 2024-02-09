@@ -9,6 +9,7 @@ export S2M_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
 export S2M_MQTT_TOPIC="$(bashio::config 'mqtt_topic')"
 export S2M_POLL_INTERVAL="$(bashio::config 'poll_interval')"
 export S2M_VERBOSE=true
+SITE_NAME="$(bashio::config 'site_name')"
 
 # Get username, password, scheme, hostname and port from URI
 function parse_uri() {
@@ -25,7 +26,7 @@ publish_sensor() {
 	local value_template="$4"
 	local device_class="${5:-null}"
 	local unit_of_measurement="${6:-null}"
-	local state_topic=$S2M_MQTT_TOPIC
+	local state_topic=$S2M_MQTT_TOPIC/site/$SITE_NAME/scenInfo
 
 	local username=$(parse_uri $S2M_MQTT_URI username)
 	local password=$(parse_uri $S2M_MQTT_URI password)
