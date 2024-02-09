@@ -10,6 +10,10 @@ export S2M_MQTT_TOPIC="$(bashio::config 'mqtt_topic')"
 export S2M_POLL_INTERVAL="$(bashio::config 'poll_interval')"
 export S2M_VERBOSE=true
 
+
+ 
+
+
 # Function to publish MQTT messages for a sensor
 publish_sensor() {
 	local topic="$1"
@@ -19,6 +23,12 @@ publish_sensor() {
 	local device_class="${5:-null}"
 	local unit_of_measurement="${6:-null}"
 	local state_topic=$S2M_MQTT_TOPIC
+
+	local hostname=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').hostname)")
+	local username=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').username)")
+	local password=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').password)")
+	local port=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').port)")
+
 	local payload=$(
 		jq -c -n \
 			--arg name "$name" \
@@ -32,7 +42,7 @@ publish_sensor() {
 	)
 	echo Announcing entity: \'$name\' with payload
 	echo $payload
-	mosquitto_pub -h "$S2M_MQTT_URI" -u "$S2M_MQTT_USERNAME" -P "$S2M_MQTT_PASSWORD" -t "$topic" -m "$payload" --retain
+	mosquitto_pub -h "$hostname" -p "${port:-1883}" -u "${S2M_MQTT_USERNAME:-$username}" -P "${S2M_MQTT_PASSWORD:-$password}" -t "$topic" -m "$payload" --retain
 	echo "Done."
 	echo ""
 }
