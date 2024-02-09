@@ -27,11 +27,11 @@ publish_sensor() {
 	local unit_of_measurement="${6:-null}"
 	local state_topic=$S2M_MQTT_TOPIC
 
-	local username=$(parse_uri $S2M_MQTT_URI, username)
-	local password=$(parse_uri $S2M_MQTT_URI, password)
-	local scheme=$(parse_uri $S2M_MQTT_URI, scheme)
-	local hostname=$(parse_uri $S2M_MQTT_URI, hostname)
-	local port=$(parse_uri $S2M_MQTT_URI, port)
+	local username=$(parse_uri $S2M_MQTT_URI username)
+	local password=$(parse_uri $S2M_MQTT_URI password)
+	local scheme=$(parse_uri $S2M_MQTT_URI scheme)
+	local hostname=$(parse_uri $S2M_MQTT_URI hostname)
+	local port=$(parse_uri $S2M_MQTT_URI port)
 
 	local payload=$(
 		jq -c -n \
