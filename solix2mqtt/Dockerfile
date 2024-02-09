@@ -1,5 +1,5 @@
 FROM node:21-alpine3.17
-RUN apk add --no-cache git curl jq bash mosquitto-clients
+RUN apk add --no-cache git curl jq bash mosquitto-clients python3
 ARG BASHIO_VERSION="v0.16.0"
 RUN curl -J -L -o /tmp/bashio.tar.gz \
     "https://github.com/hassio-addons/bashio/archive/${BASHIO_VERSION}.tar.gz" \
