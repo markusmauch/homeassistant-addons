@@ -24,9 +24,10 @@ publish_sensor() {
 	local unit_of_measurement="${6:-null}"
 	local state_topic=$S2M_MQTT_TOPIC
 
-	local hostname=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').hostname)")
 	local username=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').username)")
 	local password=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').password)")
+	local scheme=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').scheme)")
+	local hostname=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').hostname)")
 	local port=$(python3 -c "from urllib.parse import urlparse; print(urlparse('$S2M_MQTT_URI').port)")
 
 	local payload=$(
