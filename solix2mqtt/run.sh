@@ -44,11 +44,9 @@ publish_sensor() {
 			--arg unique_id "$unique_id" \
 			'{"name": $name, "state_topic": $state_topic, "value_template": $value_template, "device_class": $device_class, "unit_of_measurement": $unit_of_measurement, "unique_id": $unique_id} | with_entries(select(.value!="null"))'
 	)
+	echo Connecting to host: "$hostname:${port:-1883}"
 	echo Announcing entity: \'$name\' with payload
 	echo $payload
-	echo $hostname
-	echo "${port:-1883}"
-	echo "${S2M_MQTT_USERNAME:-$username}"
 	mosquitto_pub -h "$hostname" -p "${port:-1883}" -u "${S2M_MQTT_USERNAME:-$username}" -P "${S2M_MQTT_PASSWORD:-$password}" -t "$topic" -m "$payload" --retain
 	echo "Done."
 	echo ""
