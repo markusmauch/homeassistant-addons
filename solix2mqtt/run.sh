@@ -57,7 +57,7 @@ publish_sensor \
 	"homeassistant/sensor/solarbank_e1600/battery_level/config" \
 	"Solarbank E1600 Battery Level"\
 	"solarbank_e1600_battery_level" \
-	"{{ value_json.solarbank_info.total_battery_power | (float*100) }}" \
+	"{{ ( value_json.solarbank_info.total_battery_power | float ) * 100 }}" \
 	"battery" \
 	"%"
 
