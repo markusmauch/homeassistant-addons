@@ -22,16 +22,5 @@ __mqtt_password__: Optional password for MQTT authentication
 
 __mqtt_topic__: Topic where data will be be published
 
-### Change log
-
-#### Version 1.2
-- Added site_name parameter
-- mqtt_host has been replaced by mqtt_uri
-- Added mqtt_topic to use a custom topic
-- Added statistics
-
-##### Breaking changes
-- Replacement of parameter mqtt_host requires to specify the complete host URI (https://datatracker.ietf.org/doc/html/rfc3986).
-
 ## Support
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/markusmauch)

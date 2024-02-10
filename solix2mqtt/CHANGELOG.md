@@ -1,0 +1,11 @@
+
+# Version 1.2
+
+## New features
+- Added site_name parameter
+- mqtt_host has been replaced by mqtt_uri
+- Added mqtt_topic to use a custom topic
+- Added statistics
+
+## Breaking changes
+- Replacement of parameter mqtt_host requires to specify the complete host URI (https://datatracker.ietf.org/doc/html/rfc3986).
