@@ -1,6 +1,10 @@
 # Anker Solix Solarbank E1600 to MQTT
 
-This addon uses the [solix2mqtt](https://github.com/tomquist/solix2mqtt) library to poll the Solix API for the latest sample data and publish them to an MQTT broker.
+This addon uses the [solix2mqtt](https://github.com/tomquist/solix2mqtt) library to poll the Solix API for the latest sample data and publish it to an MQTT broker.
+
+## Prerequisites
+
+You need to have a running [MQTT broker](https://github.com/home-assistant/addons/tree/master/mosquitto) instance.
 
 ## Configuration
 
