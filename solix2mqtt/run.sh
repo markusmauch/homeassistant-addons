@@ -136,4 +136,4 @@ publish_sensor \
 	"currency" \
 	"{{ value_json.statistics[2].unit }}"
 
-node ./bin/index.js
+node ./index.js
