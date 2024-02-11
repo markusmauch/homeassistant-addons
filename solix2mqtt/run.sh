@@ -160,6 +160,6 @@ publish_sensor \
 	"{{value_json.ranges|length}}" \
 	null \
 	null \
-	"{{'complex_object_list:': value_json.ranges}}"
+	"{{'complex_object_list': value_json.ranges}}"
 
 node ./index.js
