@@ -9,6 +9,7 @@
 # Version 1.3
 
 - Added schedule (read-only)
+- Added site homepage (read-only)
 
 ## Breaking changes
 - Replacement of parameter mqtt_host requires to specify the complete host URI (https://datatracker.ietf.org/doc/html/rfc3986).

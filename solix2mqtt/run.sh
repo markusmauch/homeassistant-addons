@@ -120,21 +120,11 @@ publish_sensor \
 	$S2M_MQTT_TOPIC/site/$S2M_SITE_NAME/scenInfo \
 	"{{ value_json.solarbank_info.solarbank_list[0].charging_status }}"
 
-# Publish statistics yield
-publish_sensor \
-	"homeassistant/sensor/solarbank_e1600/statistics_yield/config" \
-	"Solarbank E1600 Statistics Yield" \
-	"solarbank_e1600_statistics_yield" \
-	$S2M_MQTT_TOPIC/site/$S2M_SITE_NAME/scenInfo \
-	"{{ value_json.statistics[0].total }}" \
-	"energy" \
-	"kWh"
-
 # Publish statistics co2 savings
 publish_sensor \
-	"homeassistant/sensor/solarbank_e1600/statistics_co2_savings/config" \
-	"Solarbank E1600 Statistics CO2 Savings" \
-	"solarbank_e1600_statistics_co2_savings" \
+	"homeassistant/sensor/solarbank_e1600/co2_savings/config" \
+	"Solarbank E1600 CO2 Savings" \
+	"solarbank_e1600_co2_savings" \
 	$S2M_MQTT_TOPIC/site/$S2M_SITE_NAME/scenInfo \
 	"{{ value_json.statistics[1].total }}" \
 	"weight" \
@@ -142,9 +132,9 @@ publish_sensor \
 
 # Publish statistics saved costs
 publish_sensor \
-	"homeassistant/sensor/solarbank_e1600/statistics_saved_costs/config" \
-	"Solarbank E1600 Charging Statistics Saved Costs" \
-	"solarbank_e1600_statistics_saved_costs" \
+	"homeassistant/sensor/solarbank_e1600/saved_costs/config" \
+	"Solarbank E1600 Saved Costs" \
+	"solarbank_e1600_saved_costs" \
 	$S2M_MQTT_TOPIC/site/$S2M_SITE_NAME/scenInfo \
 	"{{ value_json.statistics[2].total }}" \
 	"monetary" \
@@ -160,5 +150,16 @@ publish_sensor \
 	null \
 	null \
 	$S2M_MQTT_TOPIC/site/$S2M_SITE_NAME/schedule
+
+# Publish site homepage
+publish_sensor \
+	"homeassistant/sensor/solarbank_e1600/site_homepage/config" \
+	"Solarbank E1600 Site Homepage" \
+	"solarbank_e1600_site_homepage" \
+	$S2M_MQTT_TOPIC/site/site_homepage \
+	null \
+	null \
+	null \
+	$S2M_MQTT_TOPIC/site/site_homepage
 
 node ./index.js
