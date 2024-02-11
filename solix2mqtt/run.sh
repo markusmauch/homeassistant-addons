@@ -45,6 +45,7 @@ publish_sensor() {
 			--arg device_class "$device_class" \
 			--arg unit_of_measurement "$unit_of_measurement" \
 			--arg unique_id "$unique_id" \
+			--arg attribute_template "$attribute_template" \
 			'{"name": $name, "state_topic": $state_topic, "value_template": $value_template, "attribute_template": $attribute_template, "device_class": $device_class, "unit_of_measurement": $unit_of_measurement, "unique_id": $unique_id} | with_entries(select(.value!="null"))'
 	)
 	echo Announcing entity \'$name\' to host: "$scheme"://"$hostname:${port:-1883}" with payload
