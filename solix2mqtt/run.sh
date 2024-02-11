@@ -32,7 +32,7 @@ publish_sensor() {
 	local scheme=$(parse_uri $S2M_MQTT_URI scheme)
 	local hostname=$(parse_uri $S2M_MQTT_URI hostname)
 	local port=$(parse_uri $S2M_MQTT_URI port)
-	local state_topic=$S2M_MQTT_TOPIC/site/$S2M_SITE_NAME
+	local state_topic=$S2M_MQTT_TOPIC/site/$S2M_SITE_NAME/scenInfo
 
 	local payload=$(
 		jq -c -n \

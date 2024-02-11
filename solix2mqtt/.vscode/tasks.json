@@ -1,0 +1,36 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "docker-build",
+            "label": "Docker: Build",
+            "dockerBuild": {
+                "context": "${workspaceFolder}",
+                "tag": "homeassistant-solix2mqtt:latest"
+            }
+        },
+        {
+            "type": "docker-run",
+            "label": "Docker: Run",
+            "dockerRun": {
+                "envFiles": ["${workspaceFolder}/.env"],
+                "entrypoint": "/bin/bash",
+                "image": "homeassistant-solix2mqtt:latest",
+                "remove": true
+            }
+        },
+        {
+            "label": "Copy solix2mqtt",
+            "command": "rm ${workspaceFolder}/bin -rf && mkdir -p ${workspaceFolder}/bin && cp ${workspaceFolder}/../../solix2mqtt/dist/* ${workspaceFolder}/bin/",
+            "type": "shell",
+            "args": [],
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": "build"
+        }
+    ]
+}
