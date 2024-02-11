@@ -156,10 +156,10 @@ publish_sensor \
 	"homeassistant/sensor/solarbank_e1600/site_homepage/config" \
 	"Solarbank E1600 Site Homepage" \
 	"solarbank_e1600_site_homepage" \
-	$S2M_MQTT_TOPIC/site/site_homepage \
+	$S2M_MQTT_TOPIC/site_homepage \
 	null \
 	null \
 	null \
-	$S2M_MQTT_TOPIC/site/site_homepage
+	$S2M_MQTT_TOPIC/site_homepage
 
 node ./index.js
