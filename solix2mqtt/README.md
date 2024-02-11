@@ -27,45 +27,45 @@ __mqtt_password__: Optional password for MQTT authentication.
 __mqtt_topic__: Topic where data will be be published.
 
 ## Exposed entities
-```
-exposed_entities:
-  - name: "Battery Level Sensor"
-    entity_id: solarbank_e1600_battery_level
-    device_class: battery
-    unit_of_measurement: %
-  - name: "Photovoltaic Power Sensor"
-    entity_id: solarbank_e1600_photovoltaic_power
-    device_class: power
-    unit_of_measurement: W
-  - name: "Photovoltaic Yield Sensor"
-    entity_id: solarbank_e1600_photovoltaic_yield
-    device_class: energy
-    unit_of_measurement: kWh
-  - name: "Output Power Sensor"
-    entity_id: solarbank_e1600_output_power
-    device_class: power
-    unit_of_measurement: W
-  - name: "Charging Power Sensor"
-    entity_id: solarbank_e1600_charging_power
-    device_class: power
-    unit_of_measurement: W
-  - name: "Last Update"
-    entity_id: solarbank_e1600_last_update
-  - name: "Statistics Yield"
-    entity_id: solarbank_e1600_statistics_yield
-    device_class: energy
-    unit_of_measurement: kWh
-  - name: "Statistics Co2 Savings"
-    entity_id: solarbank_e1600_statistics_co2_savings
-    device_class: weight
-    unit_of_measurement: kg
-  - name: "Statistics Saved Costs"
-    entity_id: solarbank_e1600_statistics_saved_costs
-    device_class: monetary
-    unit_of_measurement: EUR
-  - name: "Schedule"
-    entity_id: solarbank_e1600_schedule
-```
+  - Battery Level Sensor
+    - entity_id: solarbank_e1600_battery_level
+    - device_class: battery
+    - unit_of_measurement: %
+
+  - Photovoltaic Power Sensor
+    - entity_id: solarbank_e1600_photovoltaic_power
+    - device_class: power
+    - unit_of_measurement: W
+
+  - Photovoltaic Yield Sensor
+    - entity_id: solarbank_e1600_photovoltaic_yield
+    - device_class: energy
+    - unit_of_measurement: kWh
+
+  - Output Power Sensor
+    - entity_id: solarbank_e1600_output_power
+    - device_class: power
+    - unit_of_measurement: W
+  - Charging Power Sensor
+    - entity_id: solarbank_e1600_charging_power
+    - device_class: power
+    - unit_of_measurement: W
+  - Last Update
+    - entity_id: solarbank_e1600_last_update
+  - Statistics Yield
+    - entity_id: solarbank_e1600_statistics_yield
+    - device_class: energy
+    - unit_of_measurement: kWh
+  - Statistics Co2 Savings
+    - entity_id: solarbank_e1600_statistics_co2_savings
+    - device_class: weight
+    - unit_of_measurement: kg
+  - Statistics Saved Costs
+    - entity_id: solarbank_e1600_statistics_saved_costs
+    - device_class: monetary
+    - unit_of_measurement: EUR
+  - Schedule
+    - entity_id: solarbank_e1600_schedule
 
 ## Troubleshooting
 In order to test the communication it is helpful to use a MQTT client tool like [MQTT Explorer](https://mqtt-explorer.com/) which is also [available as an add-on](https://github.com/home-assistant/addons/tree/master/mosquitto) for Home Assistant.
@@ -168,6 +168,57 @@ properties:
 required: [home_info, solar_list, pps_info, statistics, topology_type, solarbank_info, retain_load, updated_time, power_site_type, site_id, powerpanel_list]
 
 ```
+The schedule sensor tracks the (read-only) schedule data as attribute value with the following scheme:
+```
+type: object
+properties:
+  ranges:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+        start_time:
+          type: string
+          format: time
+        end_time:
+          type: string
+          format: time
+        turn_on:
+          type: boolean
+        appliance_loads:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              power:
+                type: integer
+              number:
+                type: integer
+        charge_priority:
+          type: integer
+  min_load:
+    type: integer
+  max_load:
+    type: integer
+  step:
+    type: integer
+  is_charge_priority:
+    type: integer
+  default_charge_priority:
+    type: integer
+  is_zero_output_tips:
+    type: integer
+  friendly_name:
+    type: string
+
+```
+
 
 <!-- ```
 site_list:

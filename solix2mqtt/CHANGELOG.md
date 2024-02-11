@@ -5,6 +5,9 @@
 - mqtt_host has been replaced by mqtt_uri
 - Added mqtt_topic to use a custom topic
 - Added statistics
+
+# Version 1.3
+
 - Added schedule (read-only)
 
 ## Breaking changes
