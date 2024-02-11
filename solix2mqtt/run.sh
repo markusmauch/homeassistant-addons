@@ -126,7 +126,7 @@ publish_sensor \
 	"Solarbank E1600 Statistics CO2 Savings" \
 	"solarbank_e1600_statistics_co2_savings" \
 	"{{ value_json.statistics[1].total }}" \
-	"mass" \
+	"weight" \
 	"kg"
 
 # Publish statistics saved costs
@@ -135,7 +135,7 @@ publish_sensor \
 	"Solarbank E1600 Charging Statistics Saved Costs" \
 	"solarbank_e1600_statistics_saved_costs" \
 	"{{ value_json.statistics[2].total }}" \
-	"currency" \
-	"{{ value_json.statistics[2].unit }}"
+	"monetary" \
+	"{{ 'EUR' if value_json.statistics[2].unit = '€' else 'USD' if value_json.statistics[2].unit = '$' else '' }}"
 
 node ./index.js

@@ -26,6 +26,45 @@ __mqtt_password__: Optional password for MQTT authentication.
 
 __mqtt_topic__: Topic where data will be be published.
 
+## Exposed entities
+```
+exposed_entities:
+  - name: "Battery Level Sensor"
+    entity_id: solarbank_e1600_battery_level
+    device_class: battery
+    unit_of_measurement: %
+  - name: "Photovoltaic Power Sensor"
+    entity_id: solarbank_e1600_photovoltaic_power
+    device_class: power
+    unit_of_measurement: W
+  - name: "Photovoltaic Yield Sensor"
+    entity_id: solarbank_e1600_photovoltaic_yield
+    device_class: energy
+    unit_of_measurement: kWh
+  - name: "Output Power Sensor"
+    entity_id: solarbank_e1600_output_power
+    device_class: power
+    unit_of_measurement: W
+  - name: "Charging Power Sensor"
+    entity_id: solarbank_e1600_charging_power
+    device_class: power
+    unit_of_measurement: W
+  - name: "Last Update"
+    entity_id: solarbank_e1600_last_update
+  - name: "Statistics Yield"
+    entity_id: solarbank_e1600_statistics_yield
+    device_class: energy
+    unit_of_measurement: kWh
+  - name: "Statistics Co2 Savings"
+    entity_id: solarbank_e1600_statistics_co2_savings
+    device_class: weight
+    unit_of_measurement: kg
+  - name: "Statistics Saved Costs"
+    entity_id: solarbank_e1600_statistics_saved_costs
+    device_class: monetary
+    unit_of_measurement: <configured currency symbol>
+```
+
 ## Troubleshooting
 In order to test the communication it is helpful to use a MQTT client tool like [MQTT Explorer](https://mqtt-explorer.com/) which is also [available as an add-on](https://github.com/home-assistant/addons/tree/master/mosquitto) for Home Assistant.
 
