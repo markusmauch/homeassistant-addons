@@ -136,7 +136,7 @@ publish_sensor \
 	"Solarbank E1600 Saved Costs" \
 	"solarbank_e1600_saved_costs" \
 	$S2M_MQTT_TOPIC/site/$S2M_SITE_NAME/scenInfo \
-	"{{ value_json.statistics[2].total }}" \
+	"{{ value_json }}" \
 	"monetary" \
 	"EUR"
 
@@ -157,7 +157,7 @@ publish_sensor \
 	"Solarbank E1600 Site Homepage" \
 	"solarbank_e1600_site_homepage" \
 	$S2M_MQTT_TOPIC/site_homepage \
-	null \
+	"{{value_json.friendly_name}}" \
 	null \
 	null \
 	$S2M_MQTT_TOPIC/site_homepage
