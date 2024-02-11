@@ -3,6 +3,7 @@
 export S2M_USER="$(bashio::config 'user')"
 export S2M_PASSWORD="$(bashio::config 'password')"
 export S2M_COUNTRY="$(bashio::config 'country')"
+export S2M_SITE_NAME="$(bashio::config 'site_name')"
 export S2M_MQTT_URI="$(bashio::config 'mqtt_uri')"
 export S2M_MQTT_USERNAME="$(bashio::config 'mqtt_username')"
 export S2M_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
@@ -31,12 +32,13 @@ publish_sensor() {
 	local scheme=$(parse_uri $S2M_MQTT_URI scheme)
 	local hostname=$(parse_uri $S2M_MQTT_URI hostname)
 	local port=$(parse_uri $S2M_MQTT_URI port)
+	local state_topic=$S2M_MQTT_TOPIC/site/$S2M_SITE_NAME
 
 	local payload=$(
 		jq -c -n \
 			--arg name "$name" \
 			--arg topic "$topic" \
-			--arg state_topic "$S2M_MQTT_TOPIC" \
+			--arg state_topic "$state_topic" \
 			--arg value_template "$value_template" \
 			--arg device_class "$device_class" \
 			--arg unit_of_measurement "$unit_of_measurement" \

@@ -10,71 +10,26 @@ You need to have a running [MQTT broker](https://github.com/home-assistant/addon
 
 The add-on can be configured using the following parameters:
 
-__user__: A Solix API client id
+__user__: A Solix API client id.
 
-__password__: The client secret
+__password__: The client secret.
 
-__country__: A two-letter country code (e.g. DE)
+__site_name__: The name of the site for which home assistant entities will be announced for (name can be changed in the Anker App). The add-on currently supports only one site.
 
-__mqtt_uri__: The MQTT broker URL, e.g. mqtt://homeassistant.local:1883
+__country__: A two-letter country code (e.g. DE).
 
-__mqtt_username__: Optional username for MQTT authentication
+__mqtt_uri__: The MQTT broker URL, e.g. mqtt://homeassistant.local:1883.
 
-__mqtt_password__: Optional password for MQTT authentication
+__mqtt_username__: Optional username for MQTT authentication.
 
-__mqtt_topic__: Topic where data will be be published
+__mqtt_password__: Optional password for MQTT authentication.
+
+__mqtt_topic__: Topic where data will be be published.
 
 ## Troubleshooting
- In order to test the communication it is helpful to use a MQTT client tool like [MQTT Explorer](https://mqtt-explorer.com/) which is also [available as an add-on](https://github.com/home-assistant/addons/tree/master/mosquitto) for Home Assistant.
+In order to test the communication it is helpful to use a MQTT client tool like [MQTT Explorer](https://mqtt-explorer.com/) which is also [available as an add-on](https://github.com/home-assistant/addons/tree/master/mosquitto) for Home Assistant.
 
-The underlaying solix2mqtt library polls the data from the Anker API and publishes the result as JSON to the specified __mqtt_topic__. If your mqtt_topic is '' You should see
-
-```
-site_list:
-  - site_id: string
-    site_name: string
-    site_img: string
-    device_type_list:
-      - integer
-      - integer
-    ms_type: integer
-    power_site_type: integer
-    is_allow_delete: boolean
-
-solar_list:
-  - device_sn: string
-    device_name: string
-    device_img: string
-    bind_site_status: string
-    generate_power: string
-    power_unit: string
-    status: string
-    wireless_type: string
-    device_pn: string
-    main_version: string
-
-pps_list: []
-
-solarbank_list:
-  - device_pn: string
-    device_sn: string
-    device_name: string
-    device_img: string
-    battery_power: string
-    bind_site_status: string
-    charging_power: string
-    power_unit: string
-    charging_status: string
-    status: string
-    wireless_type: string
-    main_version: string
-    photovoltaic_power: string
-    output_power: string
-    create_time: integer
-    set_load_power: string
-
-powerpanel_list: []
-```
+The underlaying solix2mqtt library polls the data from the Anker API and publishes the result as JSON message to the specified MQTT topic. If your `` mqtt_topic`` is _anker/solix_ and your ``site_name`` is _Balkonsolar_ you should see a message for the topic ```anker/solix/site/Balkonsolar/ScenInfo```. The JSON message has the following scheme:
 
 ```
 type: object
@@ -171,8 +126,55 @@ properties:
 
 required: [home_info, solar_list, pps_info, statistics, topology_type, solarbank_info, retain_load, updated_time, power_site_type, site_id, powerpanel_list]
 
-
 ```
+
+<!-- ```
+site_list:
+  - site_id: string
+    site_name: string
+    site_img: string
+    device_type_list:
+      - integer
+      - integer
+    ms_type: integer
+    power_site_type: integer
+    is_allow_delete: boolean
+
+solar_list:
+  - device_sn: string
+    device_name: string
+    device_img: string
+    bind_site_status: string
+    generate_power: string
+    power_unit: string
+    status: string
+    wireless_type: string
+    device_pn: string
+    main_version: string
+
+pps_list: []
+
+solarbank_list:
+  - device_pn: string
+    device_sn: string
+    device_name: string
+    device_img: string
+    battery_power: string
+    bind_site_status: string
+    charging_power: string
+    power_unit: string
+    charging_status: string
+    status: string
+    wireless_type: string
+    main_version: string
+    photovoltaic_power: string
+    output_power: string
+    create_time: integer
+    set_load_power: string
+
+powerpanel_list: []
+``` -->
+
 
 ## Support
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/markusmauch)
