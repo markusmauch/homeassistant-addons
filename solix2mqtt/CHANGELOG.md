@@ -2,7 +2,6 @@
 # Version 1.2
 
 ## New features
-- Added site_name parameter
 - mqtt_host has been replaced by mqtt_uri
 - Added mqtt_topic to use a custom topic
 - Added statistics

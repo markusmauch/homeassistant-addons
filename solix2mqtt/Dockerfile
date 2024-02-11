@@ -7,10 +7,10 @@ RUN curl -J -L -o /tmp/bashio.tar.gz \
     && tar zxvf /tmp/bashio.tar.gz --strip 1 -C /tmp/bashio \
     && mv /tmp/bashio/lib /usr/lib/bashio \
     && ln -s /usr/lib/bashio/bashio /usr/bin/bashio
-RUN git clone https://github.com/tomquist/solix2mqtt.git
+# RUN git clone https://github.com/tomquist/solix2mqtt.git
 WORKDIR /solix2mqtt
-RUN npm install
-RUN ./node_modules/.bin/tsc
+COPY bin ./
+RUN npm i
 COPY run.sh ./
 RUN chmod a+x run.sh
 CMD [ "./run.sh" ]
