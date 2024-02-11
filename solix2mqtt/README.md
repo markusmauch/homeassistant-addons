@@ -62,7 +62,9 @@ exposed_entities:
   - name: "Statistics Saved Costs"
     entity_id: solarbank_e1600_statistics_saved_costs
     device_class: monetary
-    unit_of_measurement: <configured currency symbol>
+    unit_of_measurement: EUR
+  - name: "Schedule"
+    entity_id: solarbank_e1600_schedule
 ```
 
 ## Troubleshooting

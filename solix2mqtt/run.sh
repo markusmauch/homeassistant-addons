@@ -160,6 +160,6 @@ publish_sensor \
 	"{{value_json.ranges|length}}" \
 	null \
 	null \
-	"{{'attribute_templates:': value_json.ranges}}"
+	"{{'attribute_templates:': value_json.ranges|tojson}}"
 
 node ./index.js
