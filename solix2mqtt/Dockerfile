@@ -1,7 +1,8 @@
 # ARG BUILD_FROM
 # FROM ${BUILD_FROM}
 
-FROM alpine:3.17
+# FROM alpine:3.17
+FROM node:21-alpine3.17
 RUN apk add --no-cache curl jq mosquitto-clients python3 py3-pip
 RUN pip install cryptography aiohttp paho-mqtt
 
