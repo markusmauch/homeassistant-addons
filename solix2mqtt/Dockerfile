@@ -1,7 +1,7 @@
 # ARG BUILD_FROM
 # FROM ${BUILD_FROM}
 
-FROM alpine:3.19.1
+FROM alpine:3.17
 RUN apk add --no-cache git curl jq bash mosquitto-clients python3 py3-pip
 RUN pip install cryptography aiohttp paho-mqtt --break-system-packages
 
