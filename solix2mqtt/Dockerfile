@@ -3,7 +3,7 @@
 
 FROM alpine:3.17
 RUN apk add --no-cache git curl jq bash mosquitto-clients python3 py3-pip
-RUN pip install cryptography aiohttp paho-mqtt --break-system-packages
+RUN pip install cryptography aiohttp paho-mqtt
 
 ARG BASHIO_VERSION="v0.16.0"
 RUN curl -J -L -o /tmp/bashio.tar.gz \
