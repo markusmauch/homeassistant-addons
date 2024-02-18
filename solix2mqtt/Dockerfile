@@ -2,7 +2,7 @@
 # FROM ${BUILD_FROM}
 
 FROM alpine:3.17
-RUN apk add --no-cache git curl jq bash mosquitto-clients python3 py3-pip
+RUN apk add --no-cache curl jq mosquitto-clients python3 py3-pip
 RUN pip install cryptography aiohttp paho-mqtt
 
 ARG BASHIO_VERSION="v0.16.0"
