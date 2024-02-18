@@ -21,7 +21,7 @@
         },
         {
             "label": "Copy solix2mqtt",
-            "command": "rm ${workspaceFolder}/bin -rf && mkdir -p ${workspaceFolder}/bin && cp ${workspaceFolder}/../../solix2mqtt/dist/* ${workspaceFolder}/bin/",
+            "command": "rm ${workspaceFolder}/bin -rf && mkdir -p ${workspaceFolder}/bin/api && cp ${workspaceFolder}/../../anker-solix-api/api/*.py ${workspaceFolder}/bin/api/ && cp ${workspaceFolder}/../../anker-solix-api/solix2mqtt.py ${workspaceFolder}/bin/solix2mqtt.py",
             "type": "shell",
             "args": [],
             "problemMatcher": [

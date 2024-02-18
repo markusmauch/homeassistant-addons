@@ -1,3 +1,7 @@
+# Version 1.4
+## New features
+- Use python library (https://github.com/thomluther/anker-solix-api/tree/main)
+
 # Version 1.3
 ## New features
 - Added schedule (read-only)

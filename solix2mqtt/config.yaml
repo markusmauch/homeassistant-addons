@@ -1,6 +1,6 @@
 name: "Solix 2 MQTT"
 description: "Anker Solix E1600 MQTT integration"
-version: "1.3.4"
+version: "1.4.0"
 slug: "solix2mqtt"
 init: false
 host_network: true
