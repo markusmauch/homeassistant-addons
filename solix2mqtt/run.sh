@@ -18,4 +18,4 @@ function parse_uri() {
 	echo $(python3 -c "from urllib.parse import urlparse; value=urlparse('$uri').$key; print(value) if value is not None else None")
 }
 
-node ./index.js
+python3 bin/solix2mqtt.py
