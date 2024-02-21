@@ -1,15 +1,16 @@
-#!/usr/bin/env bashio
+#!/usr/bin/env bash
+set -e
 
-export S2M_USER="$(bashio::config 'user')"
-export S2M_PASSWORD="$(bashio::config 'password')"
-export S2M_COUNTRY="$(bashio::config 'country')"
-export S2M_MQTT_URI="$(bashio::config 'mqtt_uri')"
-export S2M_MQTT_USERNAME="$(bashio::config 'mqtt_username')"
-export S2M_MQTT_PASSWORD="$(bashio::config 'mqtt_password')"
-export S2M_MQTT_TOPIC="$(bashio::config 'mqtt_topic')"
-# export S2M_POLL_INTERVAL=$(bashio::config 'poll_interval')
-echo "Poll Interval: $(bashio::config 'poll_interval')"
-export S2M_POLL_INTERVAL=10
+CONFIG_PATH=/data/options.json
+
+export S2M_USER=$(jq --raw-output '.user // empty' $CONFIG_PATH)
+export S2M_PASSWORD=$(jq --raw-output '.password // empty' $CONFIG_PATH)
+export S2M_COUNTRY=$(jq --raw-output '.country // empty' $CONFIG_PATH)
+export S2M_MQTT_URI=$(jq --raw-output '.mqtt_uri // empty' $CONFIG_PATH)
+export S2M_MQTT_USERNAME=$(jq --raw-output '.mqtt_username // empty' $CONFIG_PATH)
+export S2M_MQTT_PASSWORD=$(jq --raw-output '.mqtt_password // empty' $CONFIG_PATH)
+export S2M_MQTT_TOPIC=$(jq --raw-output '.mqtt_topic // empty' $CONFIG_PATH)
+export S2M_POLL_INTERVAL=$(jq --raw-output '.poll_interval // 30' $CONFIG_PATH)
 export S2M_VERBOSE=true
 
 python3 solix2mqtt.py

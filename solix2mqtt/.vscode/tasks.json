@@ -6,17 +6,22 @@
             "label": "Docker: Build",
             "dockerBuild": {
                 "context": "${workspaceFolder}",
-                "tag": "homeassistant-solix2mqtt:latest"
+                "tag": "homeassistant-solix2mqtt:latest",
+                "buildArgs": { "BUILD_FROM": "ghcr.io/home-assistant/i386-base-python:3.12-alpine3.19" }
             }
         },
         {
             "type": "docker-run",
             "label": "Docker: Run",
             "dockerRun": {
-                "envFiles": ["${workspaceFolder}/.env"],
                 "entrypoint": "/bin/bash",
                 "image": "homeassistant-solix2mqtt:latest",
-                "remove": true
+                "remove": true,
+                "volumes": [ {
+                    "containerPath": "/data/options.json",
+                    "localPath": "${workspaceFolder}/options.json",
+                    "permissions": "ro"
+                } ]
             }
         },
         {
