@@ -13,7 +13,14 @@ export S2M_MQTT_TOPIC=$(jq --raw-output '.mqtt_topic // empty' $CONFIG_PATH)
 export S2M_POLL_INTERVAL=$(jq --raw-output '.poll_interval // 30' $CONFIG_PATH)
 export S2M_VERBOSE=true
 
-echo $S2M_USER
-echo $S2M_COUNTRY
+echo export S2M_USER
+echo export S2M_PASSWORD
+echo export S2M_COUNTRY
+echo export S2M_MQTT_URI
+echo export S2M_MQTT_USERNAME
+echo export S2M_MQTT_PASSWORD
+echo export S2M_MQTT_TOPIC
+echo export S2M_POLL_INTERVAL
+echo export S2M_VERBOSE
 
 python3 solix2mqtt.py
