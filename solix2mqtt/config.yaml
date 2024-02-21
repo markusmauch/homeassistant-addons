@@ -1,10 +1,11 @@
 name: "Solix 2 MQTT"
 description: "Anker Solix E1600 MQTT integration"
-version: "1.5.13"
+version: "1.5.14"
 slug: "solix2mqtt"
 init: false
 host_network: true
 homeassistant_api: true
+hassio_api: true
 map:
   - addons:rw
 arch:
