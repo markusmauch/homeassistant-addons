@@ -1,12 +1,12 @@
 name: "Solix 2 MQTT"
 description: "Anker Solix E1600 MQTT integration"
-version: "1.4.7"
+version: "1.5.11"
 slug: "solix2mqtt"
 init: false
 host_network: true
+homeassistant_api: true
 map:
   - addons:rw
-homeassistant_api: true
 arch:
   - armv7
   - i386
@@ -21,10 +21,10 @@ options:
   poll_interval: 30
 schema:
   user: str
-  password: str
+  password: password
   country: str
   mqtt_uri: str
   mqtt_username: str
-  mqtt_password: str
+  mqtt_password: password
   mqtt_topic: str
   poll_interval: int

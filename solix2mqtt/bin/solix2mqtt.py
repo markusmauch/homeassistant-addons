@@ -25,7 +25,7 @@ S2M_MQTT_URI = os.getenv( "S2M_MQTT_URI" )
 S2M_MQTT_USERNAME = os.getenv( "S2M_MQTT_USERNAME" )
 S2M_MQTT_PASSWORD = os.getenv( "S2M_MQTT_PASSWORD" )
 S2M_MQTT_TOPIC = os.getenv( "S2M_MQTT_TOPIC" )
-S2M_POLL_INTERVAL = int( os.getenv( "S2M_POLL_INTERVAL" ) if os.getenv( "S2M_POLL_INTERVAL" ) != None else "10" )
+S2M_POLL_INTERVAL = int(os.getenv("S2M_POLL_INTERVAL"))
 MQTT_HOST = urlparse(S2M_MQTT_URI).hostname
 MQTT_PORT = urlparse(S2M_MQTT_URI).port
 CLIENT_ID = f'python-mqtt-{random.randint(0, 1000)}'
@@ -254,7 +254,7 @@ async def fetch_and_publish_sites(solix: api.AnkerSolixApi, client: mqtt.Client,
         scene_info_json = json.dumps( scene_info )
         CONSOLE.info(f"Scene Info: {scene_info_json}")
         client.publish(f"{S2M_MQTT_TOPIC}/{site_name}/scene_info", scene_info_json)
-                    
+
         device_param = await solix.get_device_parm(siteId=site_id)
         device_param_json = json.dumps( device_param )
         CONSOLE.info(f"Device Param: {device_param_json}")
@@ -276,9 +276,6 @@ async def main() -> None:
                 time.sleep(S2M_POLL_INTERVAL)
 
     except Exception as exception:
-        print(client)
-        if client != None:
-            client.loop_stop()
         CONSOLE.info(f"{type(exception)}: {exception}")
 
 # run async main
