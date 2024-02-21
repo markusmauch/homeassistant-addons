@@ -13,4 +13,7 @@ export S2M_MQTT_TOPIC=$(jq --raw-output '.mqtt_topic // empty' $CONFIG_PATH)
 export S2M_POLL_INTERVAL=$(jq --raw-output '.poll_interval // 30' $CONFIG_PATH)
 export S2M_VERBOSE=true
 
+echo $S2M_USER
+echo $S2M_COUNTRY
+
 python3 solix2mqtt.py
