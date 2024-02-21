@@ -107,8 +107,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/battery_level/config",
-        "Solarbank E1600 Battery Level",
-        "solarbank_e1600_battery_level",
+        f"Solarbank E1600 {site_name} Battery Level",
+        f"solarbank_e1600_{site_name}_battery_level",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ ( value_json.solarbank_info.total_battery_power | float ) * 100 }}",
         "battery",
@@ -119,8 +119,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/photovoltaic_power/config",
-        "Solarbank E1600 Photovoltaic Power",
-        "solarbank_e1600_photovoltaic_power",
+        f"Solarbank E1600 {site_name} Photovoltaic Power",
+        f"solarbank_e1600_{site_name}_photovoltaic_power",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.total_photovoltaic_power | float }}",
         "power",
@@ -131,8 +131,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/photovoltaic_yield/config",
-        "Solarbank E1600 Photovoltaic Yield",
-        "solarbank_e1600_photovoltaic_yield",
+        f"Solarbank E1600 {site_name} Photovoltaic Yield",
+        f"solarbank_e1600_{site_name}_photovoltaic_yield",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.statistics[0].total | float }}",
         "energy",
@@ -143,8 +143,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/output_power/config",
-        "Solarbank E1600 Output Power",
-        "solarbank_e1600_output_power",
+        f"Solarbank E1600 {site_name} Output Power",
+        f"solarbank_e1600_{site_name}_output_power",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.total_output_power | float }}",
         "power",
@@ -155,8 +155,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/charging_power/config",
-        "Solarbank E1600 Charging Power",
-        "solarbank_e1600_charging_power",
+        f"Solarbank E1600 {site_name} Charging Power",
+        f"solarbank_e1600_{site_name}_charging_power",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.total_charging_power | float }}",
         "power",
@@ -167,8 +167,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/last_update/config",
-        "Solarbank E1600 Last Update",
-        "solarbank_e1600_last_update",
+        f"Solarbank E1600 {site_name} Last Update",
+        f"solarbank_e1600_{site_name}_last_update",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.updated_time }}"
     )
@@ -177,8 +177,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/charging_status/config",
-        "Solarbank E1600 Charging Status",
-        "solarbank_e1600_charging_status",
+        f"Solarbank E1600 {site_name} Charging Status",
+        f"solarbank_e1600_{site_name}_charging_status",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.solarbank_list[0].charging_status }}"
     )
@@ -187,8 +187,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/co2_savings/config",
-        "Solarbank E1600 CO2 Savings",
-        "solarbank_e1600_co2_savings",
+        f"Solarbank E1600 {site_name} CO2 Savings",
+        f"solarbank_e1600_{site_name}_co2_savings",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.statistics[1].total }}",
         "weight",
@@ -199,8 +199,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/saved_costs/config",
-        "Solarbank E1600 Saved Costs",
-        "solarbank_e1600_saved_costs",
+        f"Solarbank E1600 {site_name} Saved Costs",
+        f"solarbank_e1600_{site_name}_saved_costs",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.statistics[3].total }}",
         "monetary",
@@ -211,8 +211,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/schedule/config",
-        "Solarbank E1600 Schedule",
-        "solarbank_e1600_schedule",
+        f"Solarbank E1600 {site_name} Schedule",
+        f"solarbank_e1600_{site_name}_schedule",
         f"{S2M_MQTT_TOPIC}/{site_name}/schedule",
         "{{value_json.ranges|length}}",
         None,
@@ -224,8 +224,8 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/site_homepage/config",
-        "Solarbank E1600 Site Homepage",
-        "solarbank_e1600_site_homepage",
+        f"Solarbank E1600 {site_name} Site Homepage",
+        f"solarbank_e1600_{site_name}_site_homepage",
         f"{S2M_MQTT_TOPIC}/{site_name}",
         "{{value_json.friendly_name}}",
         None,
