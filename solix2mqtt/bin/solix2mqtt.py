@@ -94,7 +94,7 @@ def announce_sensor( client: mqtt.Client, topic: str, name: str, unique_id: str,
     if json_attributes_topic != None: msg["json_attributes_topic"] = json_attributes_topic
     CONSOLE.info(f"Announcing sensor: {msg}")
     CONSOLE.info("")
-    client.publish( topic, json.dumps( msg ) )
+    client.publish( topic, json.dumps( msg ), retain=True )
 
 def announce_sensors(client, site_list):
     client.loop_start()

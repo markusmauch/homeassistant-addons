@@ -5,6 +5,10 @@
 - Create sensors for all sites
 - Upgrade to latest anker-solix-api library (https://github.com/thomluther/anker-solix-api)
 
+## Breaking changes
+
+- In order to create sensors for all sites it was required to add the site name in the unique id of the sensors that are automatically provided by the MQTT discovery. Existing refernces (e.g. in dahsboard cards or templates) need to be updated.
+
 # Version 1.5
 
 ## New features
