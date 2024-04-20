@@ -1,3 +1,9 @@
+# Version 1.8
+
+## New features
+
+- Bump anker-solix-api to latest version (1.8.0)
+
 # Version 1.6
 
 ## New features

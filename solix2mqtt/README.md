@@ -52,7 +52,7 @@ The underlaying [anker-splix-api](https://github.com/thomluther/anker-solix-api/
 
 This add on is based on the great work of:
 
-- [anker-splix-api](https://github.com/thomluther/anker-solix-api)
+- [anker-solix-api](https://github.com/thomluther/anker-solix-api)
 - [python-eufy-security](https://github.com/FuzzyMistborn/python-eufy-security)
 - [solix2mqtt](https://github.com/tomquist/solix2mqtt)
 
