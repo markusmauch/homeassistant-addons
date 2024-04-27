@@ -1,0 +1,14 @@
+name: "example"
+description: "Example Add-On"
+version: "1.0.3"
+slug: "example"
+init: false
+#host_network: true
+hassio_api: true
+homeassistant_api: true
+hassio_role: admin
+#privileged:
+#  - SYS_RAWIO
+arch:
+  - armv7
+  - i386
