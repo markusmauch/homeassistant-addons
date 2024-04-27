@@ -3,6 +3,7 @@
 ## New features
 
 - Bump anker-solix-api to latest version (1.8.0)
+- Add support for long term statistics sensors
 
 # Version 1.6
 
