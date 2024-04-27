@@ -82,11 +82,12 @@ def on_disconnect(client, userdata, flags, reason_code, properties):
         reconnect_count += 1
     logging.info("Reconnect failed after %s attempts. Exiting...", reconnect_count)
 
-def announce_sensor( client: mqtt.Client, topic: str, name: str, unique_id: str, state_topic: str, value_template: str, device_class = None, unit_of_measurement = None, json_attributes_topic = None ):
+def announce_sensor( client: mqtt.Client, topic: str, name: str, unique_id: str, state_topic: str, value_template: str, device_class = None, state_class = None, unit_of_measurement = None, json_attributes_topic = None ):
     msg = {
         "name": name,
         "state_topic": state_topic,
         "value_template": value_template,
+        "state_class": state_class,
         "unique_id": unique_id
     }
     if device_class != None: msg["device_class"] = device_class
@@ -94,7 +95,7 @@ def announce_sensor( client: mqtt.Client, topic: str, name: str, unique_id: str,
     if json_attributes_topic != None: msg["json_attributes_topic"] = json_attributes_topic
     CONSOLE.info(f"Announcing sensor: {msg}")
     CONSOLE.info("")
-    client.publish( topic, json.dumps( msg ), retain=True )
+    client.publish( topic, json.dumps( msg ) )
 
 def announce_sensors(client, site_list):
     client.loop_start()
@@ -107,7 +108,7 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/battery_level/config",
-        f"Solarbank E1600 {site_name} Battery Level",
+        "Solarbank E1600 {site_name} Battery Level",
         f"solarbank_e1600_{site_name}_battery_level",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ ( value_json.solarbank_info.total_battery_power | float ) * 100 }}",
@@ -119,11 +120,12 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/photovoltaic_power/config",
-        f"Solarbank E1600 {site_name} Photovoltaic Power",
+        "Solarbank E1600 {site_name} Photovoltaic Power",
         f"solarbank_e1600_{site_name}_photovoltaic_power",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.total_photovoltaic_power | float }}",
         "power",
+        "measurement",
         "W"
     )
 
@@ -131,11 +133,12 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/photovoltaic_yield/config",
-        f"Solarbank E1600 {site_name} Photovoltaic Yield",
+        "Solarbank E1600 {site_name} Photovoltaic Yield",
         f"solarbank_e1600_{site_name}_photovoltaic_yield",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.statistics[0].total | float }}",
         "energy",
+        "measurement",
         "kWh"
     )
 
@@ -143,11 +146,12 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/output_power/config",
-        f"Solarbank E1600 {site_name} Output Power",
+        "Solarbank E1600 {site_name} Output Power",
         f"solarbank_e1600_{site_name}_output_power",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.total_output_power | float }}",
         "power",
+        "measurement",
         "W"
     )
 
@@ -155,7 +159,7 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/charging_power/config",
-        f"Solarbank E1600 {site_name} Charging Power",
+        "Solarbank E1600 {site_name} Charging Power",
         f"solarbank_e1600_{site_name}_charging_power",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.total_charging_power | float }}",
@@ -167,7 +171,7 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/last_update/config",
-        f"Solarbank E1600 {site_name} Last Update",
+        "Solarbank E1600 {site_name} Last Update",
         f"solarbank_e1600_{site_name}_last_update",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.updated_time }}"
@@ -177,7 +181,7 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/charging_status/config",
-        f"Solarbank E1600 {site_name} Charging Status",
+        "Solarbank E1600 {site_name} Charging Status",
         f"solarbank_e1600_{site_name}_charging_status",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.solarbank_info.solarbank_list[0].charging_status }}"
@@ -187,7 +191,7 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/co2_savings/config",
-        f"Solarbank E1600 {site_name} CO2 Savings",
+        "Solarbank E1600 {site_name} CO2 Savings",
         f"solarbank_e1600_{site_name}_co2_savings",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.statistics[1].total }}",
@@ -199,7 +203,7 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/saved_costs/config",
-        f"Solarbank E1600 {site_name} Saved Costs",
+        "Solarbank E1600 {site_name} Saved Costs",
         f"solarbank_e1600_{site_name}_saved_costs",
         f"{S2M_MQTT_TOPIC}/{site_name}/scene_info",
         "{{ value_json.statistics[3].total }}",
@@ -211,10 +215,11 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/schedule/config",
-        f"Solarbank E1600 {site_name} Schedule",
+        "Solarbank E1600 {site_name} Schedule",
         f"solarbank_e1600_{site_name}_schedule",
         f"{S2M_MQTT_TOPIC}/{site_name}/schedule",
         "{{value_json.ranges|length}}",
+        None,
         None,
         None,
         f"{S2M_MQTT_TOPIC}/{site_name}/schedule"
@@ -224,10 +229,11 @@ def announce_sensors_for_site(client: mqtt.Client, site_name: str):
     announce_sensor(
         client,
         "homeassistant/sensor/solarbank_e1600/site_homepage/config",
-        f"Solarbank E1600 {site_name} Site Homepage",
+        "Solarbank E1600 {site_name} Site Homepage",
         f"solarbank_e1600_{site_name}_site_homepage",
         f"{S2M_MQTT_TOPIC}/{site_name}",
         "{{value_json.friendly_name}}",
+        None,
         None,
         None,
         f"{S2M_MQTT_TOPIC}/{site_name}"
