@@ -1,0 +1,27 @@
+name: "powerbox-mqtt"
+description: "MQTT bridge for Maico Powerbox WS 75"
+version: "2.0.0"
+slug: "powerbox-mqtt"
+init: false
+host_network: true
+privileged:
+  - NET_ADMIN
+  - SYS_ADMIN
+arch:
+  - armv7
+options:
+  mqtt_uri: "mqtt://192.168.0.4:1883"
+  mqtt_topic: "powerbox"
+  mqtt_username: null
+  mqtt_password: null
+  modbus_uri: "modbus://192.168.0.234:502"
+  modbus_unit_id: 10
+  poll_interval: 60
+schema:
+  mqtt_uri: str
+  mqtt_topic: str
+  mqtt_username: str
+  mqtt_password: password
+  modbus_uri: str
+  modbus_unit_id: int
+  poll_interval: int
