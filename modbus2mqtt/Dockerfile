@@ -4,9 +4,9 @@ FROM $BUILD_FROM
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 WORKDIR /app
-COPY backend/* ./backend/
-COPY requirements.txt .
-COPY run.sh .
+COPY backend/* ./src/
+COPY requirements.txt ./
+COPY run.sh ./
 RUN chmod a+x run.sh
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip show schedule

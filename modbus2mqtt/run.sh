@@ -2,4 +2,4 @@
 set -e
 
 # Run your Python script
-python /app/modbus2mqtt.py
+python /app/src/modbus2mqtt.py
