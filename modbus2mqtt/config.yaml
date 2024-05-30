@@ -1,13 +1,13 @@
 name: "Modbus 2 MQTT"
 description: "Modbus 2 MQTT"
-version: "1.0.6"
+version: "1.0.7"
 slug: "example"
 init: false
 hassio_api: true
 homeassistant_api: true
 hassio_role: admin
-map:
-  - addons:rw
+# map:
+#   - addons:rw
 arch:
   - armv7
   - i386
