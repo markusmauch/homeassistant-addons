@@ -1,7 +1,7 @@
 name: "Modbus 2 MQTT"
 description: "Modbus 2 MQTT"
-version: "1.0.7"
-slug: "example"
+version: "1.0.8"
+slug: "modbus2mqtt"
 init: false
 hassio_api: true
 homeassistant_api: true
