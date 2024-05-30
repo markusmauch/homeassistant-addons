@@ -1,6 +1,6 @@
 name: "Modbus 2 MQTT"
 description: "Modbus 2 MQTT"
-version: "1.0.8"
+version: "1.0.9"
 slug: "modbus2mqtt"
 init: false
 hassio_api: true
