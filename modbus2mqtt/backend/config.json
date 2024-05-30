@@ -1,0 +1,96 @@
+{
+    "mqtt_config": {
+      "host": "mqtt://homeassistant.local:1883",
+      "username": "pi",
+      "password": "fli4l2WL500g"
+    },
+    "devices": [
+      {
+        "name": "Powerbox",
+        "unique_id": "powerbox",
+        "topic": "homeassistant",
+        "host": "modbus://powerbox.local:502",
+        "unit_id": 10,
+        "components": [
+          {
+            "type": "sensor",
+            "name": "Raumtemperatur",
+            "unique_id": "raumtemperatur",
+            "device_class": "temperature",
+            "state_class": "Measurement",
+            "unit_of_measurement": "°C",
+            "access_mode": "read",
+            "modbus_address": 700,
+            "poll_interval": 60,
+            "scale": 0.1,
+            "precision": 1
+          },
+          {
+            "type": "sensor",
+            "name": "Aussentemperatur",
+            "unique_id": "aussentemperatur",
+            "device_class": "temperature",
+            "state_class": "Measurement",
+            "unit_of_measurement": "°C",
+            "access_mode": "read",
+            "modbus_address": 703,
+            "poll_interval": 60,
+            "scale": 0.1,
+            "precision": 1
+          },
+          {
+            "type": "sensor",
+            "name": "Luftfeuchtigkeit",
+            "unique_id": "luftfeuchtigkeit",
+            "device_class": "humidity",
+            "state_class": "Measurement",
+            "unit_of_measurement": "%",
+            "access_mode": "read",
+            "modbus_address": 750,
+            "poll_interval": 60
+          },
+          {
+            "type": "sensor",
+            "name": "Betriebsart",
+            "unique_id": "betriebsart",
+            "state_class": "Measurement",
+            "access_mode": "read-write",
+            "modbus_address": 550,
+            "poll_interval": 10,
+            "scale": 1,
+            "precision": 0
+          },
+          {
+            "type": "sensor",
+            "name": "Luftungsstufe",
+            "unique_id": "luftungsstufe",
+            "access_mode": "read-write",
+            "modbus_address": 554,
+            "poll_interval": 10,
+            "scale": 1,
+            "precision": 0
+          },
+          {
+            "type": "binary_sensor",
+            "name": "Stossluftung",
+            "unique_id": "stossluftung",
+            "access_mode": "read-write",
+            "modbus_address": 551,
+            "poll_interval": 10,
+            "scale": 1,
+            "precision": 0
+          },
+          {
+            "type": "binary_sensor",
+            "name": "Einschlaffunktion",
+            "unique_id": "einschlaffunktion",
+            "access_mode": "read-write",
+            "modbus_address": 559,
+            "poll_interval": 10,
+            "scale": 1,
+            "precision": 0
+          }
+        ]
+      }
+    ]
+  }
