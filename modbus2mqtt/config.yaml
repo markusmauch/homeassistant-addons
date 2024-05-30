@@ -3,14 +3,11 @@ description: "Modbus 2 MQTT"
 version: "1.0.5"
 slug: "example"
 init: false
-#host_network: true
 hassio_api: true
 homeassistant_api: true
 hassio_role: admin
 map:
   - addons:rw
-#privileged:
-#  - SYS_RAWIO
 arch:
   - armv7
   - i386
