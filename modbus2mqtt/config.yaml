@@ -3,9 +3,11 @@ description: "Modbus 2 MQTT"
 version: "1.0.1"
 slug: "modbus2mqtt"
 init: false
-host_network: true
-# ingress: true
+# host_network: true
+hassio_api: true
 homeassistant_api: true
+hassio_role: admin
+# ingress: true
 map:
   - addons:rw
 arch:
@@ -14,5 +16,3 @@ arch:
   - armhf
   - armv7
   - i386
-options:
-schema:
