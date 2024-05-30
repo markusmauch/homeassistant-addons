@@ -1,6 +1,6 @@
 name: "Modbus 2 MQTT"
 description: "Modbus 2 MQTT"
-version: "1.0.3"
+version: "1.0.4"
 slug: "example"
 init: false
 #host_network: true
