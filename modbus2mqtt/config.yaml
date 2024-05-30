@@ -1,5 +1,5 @@
 name: "Modbus 2 MQTT"
-description: ""
+description: "Modbus 2 MQTT"
 version: "1.0.0"
 slug: "modbus2mqtt"
 init: false
