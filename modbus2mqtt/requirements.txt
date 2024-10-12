@@ -1,6 +1,9 @@
+flask
+flask-cors
 schedule
 pymodbus
 paho-mqtt
 pyyaml
 debugpy
 jsonpath-ng
+jsonata
