@@ -14,6 +14,24 @@
           "panel": "new"
         },
         "problemMatcher": []
+      },
+      {
+        "label": "modbus2mqtt: Copy Frontend",
+        "type": "shell",
+        "command": "cp ${workspaceFolder}/../modbus2mqtt-ui/build/* ${workspaceFolder}/modbus2mqtt/frontend/",
+        "problemMatcher": []
+      },
+      {
+        "label": "modbus2mqtt: Copy Backend",
+        "type": "shell",
+        "command": "cp ${workspaceFolder}/../modbus2mqtt/dist/* ${workspaceFolder}/modbus2mqtt/backend/",
+        "problemMatcher": []
+      },
+      {
+        "label": "modbus2mqtt: Start Server",
+        "type": "shell",
+        "command": "${workspaceFolder}/modbus2mqtt/backend/run",
+        "problemMatcher": []
       }
     ]
   }
