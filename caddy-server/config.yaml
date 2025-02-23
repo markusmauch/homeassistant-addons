@@ -1,0 +1,24 @@
+name: "Caddy Server"
+description: "A powerful and easy-to-use reverse proxy with automatic HTTPS for Home Assistant."
+slug: "caddyserver"
+version: "1.0.7"
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+init: false
+map:
+  - addon_config
+ports:
+  80/tcp: 80
+  443/tcp: 443
+ports_description:
+  80/tcp: "HTTP traffic"
+  443/tcp: "HTTPS traffic"
+privileged:
+  - NET_ADMIN
+  - SYS_ADMIN
+devices:
+  - "/dev/net/tun"
