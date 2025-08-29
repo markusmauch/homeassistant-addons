@@ -10,6 +10,7 @@ privileged:
   - SYS_ADMIN
 arch:
   - armv7
+  - amd64
 options:
   address: ""
   user_id: 0
