@@ -1,17 +1,17 @@
 ARG BUILD_FROM
 
-FROM node:14.21.2-alpine AS node
+FROM node:18-alpine AS node
 FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
 
-RUN \ 
+RUN \
     apk add --no-cache \
-        build-base \
-        libgudev-dev \
-        bluez \
-        bluez-libs \
-        npm
+    build-base \
+    libgudev-dev \
+    bluez \
+    bluez-libs \
+    npm
 
 # nodejs
 # copy node v14 manually
