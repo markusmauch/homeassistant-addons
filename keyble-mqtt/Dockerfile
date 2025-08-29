@@ -38,7 +38,7 @@ WORKDIR /usr/src/app
 COPY package*.json tsconfig.json ./
 
 # Install app dependencies cleanly
-RUN npm ci
+RUN npm install --omit=dev
 
 # Copy source code
 COPY src ./src
