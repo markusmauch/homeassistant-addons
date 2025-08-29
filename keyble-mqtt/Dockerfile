@@ -5,31 +5,45 @@ FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
 
-RUN \
-    apk add --no-cache \
+# Install system deps needed for keyble & bluetooth
+RUN apk add --no-cache \
     build-base \
     libgudev-dev \
     bluez \
     bluez-libs \
-    npm
+    python3 \
+    make \
+    g++
 
-# nodejs
-# copy node v14 manually
+# Copy Node 18 from builder stage (no need for apk npm!)
 COPY --from=node /usr/lib /usr/lib
 COPY --from=node /usr/local/share /usr/local/share
 COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /usr/local/include /usr/local/include
 COPY --from=node /usr/local/bin /usr/local/bin
 
-RUN npm install --update --global --unsafe-perm keyble
+# Upgrade npm to match Node 18 (fixes "idealTree" error)
+RUN npm install -g npm@10
 
+# Install keyble globally
+RUN npm install -g --unsafe-perm keyble
+
+# Apply your patch
 COPY patch/keyble.js /usr/local/lib/node_modules/keyble
 
-COPY package.json /
-COPY tsconfig.json /
-COPY src/* src/
-COPY run.sh /
+# Set workdir
+WORKDIR /usr/src/app
 
-RUN npm install
-RUN chmod a+x /run.sh
-CMD [ "/run.sh" ]
+# Copy only package.json first to leverage Docker cache
+COPY package*.json tsconfig.json ./
+
+# Install app dependencies cleanly
+RUN npm ci
+
+# Copy source code
+COPY src ./src
+COPY run.sh ./
+
+RUN chmod a+x run.sh
+
+CMD [ "./run.sh" ]
